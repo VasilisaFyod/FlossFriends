@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Схема - FlossFriends{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/publish_pattern.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="pattern-detail-container">
+        <div class="pattern-main-content">
+            <div class="pattern-section">
+                <div class="pattern-image-container">
+                    <img src="{% static 'images/pattern.jpg' %}" class="pattern-image">
+                </div>
+                
+                <div class="pattern-actions-row">
+                    <button class="action-btn like-btn">
+                        <span class="heart-icon">♥</span>
+                        <span class="action-count">124</span>
+                    </button>
+                    
+                    <button class="action-btn favorite-btn">
+                        <span class="plus-icon">+</span>
+                        <span class="action-text">Добавить в избранное</span>
+                    </button>
+                </div>
+
+                <div class="pattern-meta-info">
+                    <div class="author-section">
+                        <span class="meta-label">Автор:</span>
+                        <span class="author-name">Мария Мамашук</span>
+                    </div>
+                    
+                    <div class="categories-section">
+                        <span class="meta-label">Категории:</span>
+                        <div class="categories-list">
+                            <span class="category-tag">Растения</span>
+                            <span class="category-tag">Цветы</span>
+                            <span class="category-tag">Весна</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comments-section">
+                <div class="comments-header">
+                    <h3 class="comments-title">Комментарии</h3>
+                    <span class="comments-count">(1)</span>
+                </div>
+
+                <div class="comment-form">
+                    <textarea class="comment-input" placeholder="Напишите комментарий..."></textarea>
+                    <button class="submit-comment-btn">Отправить</button>
+                </div>
+
+                <div class="comments-list"> 
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <div class="comment-header-info">
+                                <img src="{% static 'images/avatar.png' %}" class="comment-avatar">
+                                <span class="comment-author">Мария</span>
+                            </div>
+                            <span class="comment-date">2 часа назад</span>
+                        </div>
+                        <p class="comment-text">Красота!</p>
+                        <div class="comment-footer">
+                            <button class="reply-toggle-btn">Ответить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/publish_pattern.js' %}"></script>
+{% endblock %}

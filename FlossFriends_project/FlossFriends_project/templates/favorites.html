@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Избранное - FlossFriends{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/my_patterns.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="tabs-container">
+        <h3 class="title">Избранное</h3>
+    </div>
+
+    <div class="tab-content active" id="my-patterns-tab">
+        <div class="patterns-grid">
+            <div class="pattern-card">
+                <div class="pattern-menu">
+                    <button class="menu-toggle">⋮</button>
+                    <div class="dropdown-menu">
+                        <button class="menu-item">Редактировать</button>
+                        <button class="menu-item delete">Удалить</button>
+                    </div>
+                </div>
+                <div class="pattern-preview">
+                    <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
+                </div>
+                <div class="pattern-info">
+                    <h3 class="pattern-title">Название схемы</h3>
+                </div>
+            </div>
+
+            <div class="pattern-card">
+                <div class="pattern-menu">
+                    <button class="menu-toggle">⋮</button>
+                    <div class="dropdown-menu">
+                        <button class="menu-item">Редактировать</button>
+                        <button class="menu-item delete">Удалить</button>
+                    </div>
+                </div>
+                <div class="pattern-preview">
+                    <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
+                </div>
+                <div class="pattern-info">
+                    <h3 class="pattern-title">Название схемы</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/my_patterns.js' %}"></script>
+{% endblock %}

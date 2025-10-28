@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Создать схему - FlossFriends{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/add_image_for_create.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="create-pattern-container">
+        <div class="generation-section">
+            <div class="ai-chat-section">
+                <p class="section-description">Опишите изображение, которое хотите сгенерировать для вышивки</p>
+                
+                <div class="chat-container">
+                    <div class="prompt-input-container">
+                        <textarea 
+                            class="prompt-input" 
+                            id="promptInput"
+                            placeholder="Опишите ваше изображение..."
+                            rows="3"
+                        ></textarea>
+                        <button class="create-btn" id="generateAiBtn">
+                            Сгенерировать
+                        </button>
+                    </div>
+                </div>
+
+                <div class="ai-result-container" id="aiResultContainer" >
+                    <div class="ai-generated-image">
+                        <img src="{% static 'images/pattern.jpg' %}" alt="Сгенерированное изображение" id="aiGeneratedImage">
+                        <div class="image-actions">
+                            <button class="create-btn" id="useAiImageBtn">Использовать это изображение</button>
+                            <button class="create-btn" style="background: rgba(204, 134, 94, 0.96)" id="regenerateBtn">Сгенерировать заново</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider-section">
+                <div class="divider-line"></div>
+                <span class="divider-text">или</span>
+                <div class="divider-line"></div>
+            </div>
+
+            <div class="upload-section">
+                <p class="section-description">Загрузите готовое изображение для создания схемы вышивки</p>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-placeholder">
+                        <p class="upload-title">Перетащите изображение сюда</h4>
+                        <p class="divider-text">или</p>
+                        <button class="create-btn" id="uploadBtn">
+                            Выберите файл
+                        </button>
+                        <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="/create_pattern_steps/" class="nav-link">
+                <button class="create-btn" id="createPatternBtn">
+                    Создать схему
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/add_image_for_create.js' %}"></script>
+{% endblock %}

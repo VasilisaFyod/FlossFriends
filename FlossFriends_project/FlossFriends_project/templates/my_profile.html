@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Мой профиль - FlossFriends{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/my_profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="profile-container">
+        <div class="profile-info-row">
+            <div class="avatar-section">
+                <div class="avatar">
+                    <img src="{% static 'images/avatar.png' %}" alt="Аватар" class="avatar-img">
+                    <div class="avatar-overlay">
+                        <span>✎</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="user-info-card">
+                <div class="info-item">
+                    <span class="info-label">Имя пользователя</span>
+                    <span class="info-value">Василиса</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">jhhh@mail.ru</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-card">
+            <span class="about-title">О себе</span>
+            <div class="about-content">
+                <p>Люблю вышивать крестиком с детства. Особенно нравятся сложные схемы с природой и животными. В коллекции уже более 50 готовых работ!</p>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <button class="btn btn-edit">Редактировать профиль</button>
+            <button class="btn btn-logout">Выйти</button>
+            <button class="btn btn-delete">Удалить профиль</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

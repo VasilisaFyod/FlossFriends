@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Сообщество - FlossFriends{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/community.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+
+    <div class="search-section">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Поиск...">
+            <button class="search-btn">
+                <img src="{% static 'images/icon-search.png' %}" alt="Поиск" class="search-icon">
+            </button>
+        </div>
+    </div>
+
+    <div class="filters-section">
+        <div class="filters-container">
+            <div class="filter-group">
+                <label class="filter-label">Палитра</label>
+                <select class="filter-select">
+                    <option value="animals">DMC</option>
+                    <option value="nature">Гамма</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Сложность</label>
+                <select class="filter-select">
+                    <option value="">Легкая</option>
+                    <option value="easy">Средняя</option>
+                    <option value="medium">Сложная</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Категория</label>
+                <select class="filter-select">
+                    <option value="new">Цветы</option>
+                    <option value="popular">Животные</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="patterns-grid">
+        <div class="pattern-card">
+            <a href="/publish_pattern/" class="nav-link">
+                <div class="pattern-preview">
+                    <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
+                </div>
+            </a>
+        <div class="pattern-info">
+                    <h3 class="pattern-title">Название схемы</h3>
+                </div>
+            <div class="pattern-actions">
+                <button class="action-btn add-to-inventory" title="Добавить в инвентарь">
+                    <span class="plus-icon-favorite">+</span>
+                </button>
+                <button class="action-btn favorite-btn" title="Добавить в избранное">
+                    <span class="heart-icon">♡</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="pattern-card">
+            <div class="pattern-preview">
+                <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
+            </div>
+            <div class="pattern-info">
+                    <h3 class="pattern-title">Название схемы</h3>
+                </div>
+            <div class="pattern-actions">
+                <button class="action-btn add-to-inventory" title="Добавить в инвентарь">
+                    <span class="plus-icon-favorite">+</span>
+                </button>
+                <button class="action-btn favorite-btn" title="Добавить в избранное">
+                    <span class="heart-icon">♡</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="pattern-card">
+            <div class="pattern-preview">
+                <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
+            </div>
+            <div class="pattern-info">
+                    <h3 class="pattern-title">Название схемы</h3>
+                </div>
+            <div class="pattern-actions">
+                <button class="action-btn add-to-inventory" title="Добавить в инвентарь">
+                    <span class="plus-icon-favorite">+</span>
+                </button>
+                <button class="action-btn favorite-btn" title="Добавить в избранное">
+                    <span class="heart-icon">♡</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/community.js' %}"></script>
+{% endblock %}

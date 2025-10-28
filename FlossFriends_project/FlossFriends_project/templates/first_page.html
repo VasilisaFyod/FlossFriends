@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlossFriends - Схемы для вышивки</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/first_page.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">FlossFriends</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <a href="/add_image_for_create/" class="create-button">
+                Создать схему
+            </a>
+
+            <h2 class="section-title">Популярные схемы</h2>
+            <div class="patterns-grid">
+                <div class="pattern-card">
+                    <a href="/publish_pattern/" class="nav-link">
+                        <div class="pattern-preview">
+                            <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
+                        </div>
+                    </a>
+                    <div class="pattern-info">
+                                <h3 class="pattern-title">Название схемы</h3>
+                            </div>
+                        <div class="pattern-actions">
+                            <button class="action-btn add-to-inventory" title="Добавить в инвентарь">
+                                <span class="plus-icon-favorite">+</span>
+                            </button>
+                            <button class="action-btn favorite-btn" title="Добавить в избранное">
+                                <span class="heart-icon">♡</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="pattern-card">
+                        <div class="pattern-preview">
+                            <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
+                        </div>
+                        <div class="pattern-info">
+                                <h3 class="pattern-title">Название схемы</h3>
+                            </div>
+                        <div class="pattern-actions">
+                            <button class="action-btn add-to-inventory" title="Добавить в инвентарь">
+                                <span class="plus-icon-favorite">+</span>
+                            </button>
+                            <button class="action-btn favorite-btn" title="Добавить в избранное">
+                                <span class="heart-icon">♡</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="pattern-card">
+                        <div class="pattern-preview">
+                            <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
+                        </div>
+                        <div class="pattern-info">
+                                <h3 class="pattern-title">Название схемы</h3>
+                            </div>
+                        <div class="pattern-actions">
+                            <button class="action-btn add-to-inventory" title="Добавить в инвентарь">
+                                <span class="plus-icon-favorite">+</span>
+                            </button>
+                            <button class="action-btn favorite-btn" title="Добавить в избранное">
+                                <span class="heart-icon">♡</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="{% static 'js/first_page.js' %}"></script>
+</body>
+</html>

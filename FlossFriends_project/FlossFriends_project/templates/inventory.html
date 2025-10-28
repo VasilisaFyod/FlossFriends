@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Инвентарь - FlossFriends{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inventory.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="inventory-header">
+        <h2 class="title">Инвентарь</h2>
+    </div>
+
+    <div class="inventory-content">
+        <!--Стили кнопки в файле base.css-->
+        <div class="create-section">
+            <button class="create-btn">
+                <span class="plus-icon">+</span>
+                Добавить нитку
+            </button>
+        </div>
+
+        <div class="inventory-table">
+            <div class="table-header">
+                <div class="column color-column">Цвет</div>
+                <div class="column code-column">Код</div>
+                <div class="column actions-column"></div>
+            </div>
+
+            <div class="table-body">
+                <div class="table-row">
+                    <div class="column color-column">
+                        <div class="color-swatch" style="background-color: #FF6B6B;"></div>
+                    </div>
+                    <div class="column code-column">
+                        <span class="thread-code">DMC 666</span>
+                    </div>
+                    <div class="column actions-column">
+                        <button class="delete-btn" title="Удалить нитку">
+                            <img src="{% static 'images/icon-delete.png' %}" alt="Удалить" class="delete-icon">
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="column color-column">
+                        <div class="color-swatch" style="background-color: #4ECDC4;"></div>
+                    </div>
+                    <div class="column code-column">
+                        <span class="thread-code">DMC 991</span>
+                    </div>
+                    <div class="column actions-column">
+                        <button class="delete-btn" title="Удалить нитку">
+                            <img src="{% static 'images/icon-delete.png' %}" alt="Удалить" class="delete-icon">
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="column color-column">
+                        <div class="color-swatch" style="background-color: #45B7D1;"></div>
+                    </div>
+                    <div class="column code-column">
+                        <span class="thread-code">DMC 798</span>
+                    </div>
+                    <div class="column actions-column">
+                        <button class="delete-btn" title="Удалить нитку">
+                            <img src="{% static 'images/icon-delete.png' %}" alt="Удалить" class="delete-icon">
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="column color-column">
+                        <div class="color-swatch" style="background-color: #96CEB4;"></div>
+                    </div>
+                    <div class="column code-column">
+                        <span class="thread-code">DMC 369</span>
+                    </div>
+                    <div class="column actions-column">
+                        <button class="delete-btn" title="Удалить нитку">
+                            <img src="{% static 'images/icon-delete.png' %}" alt="Удалить" class="delete-icon">
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="column color-column">
+                        <div class="color-swatch" style="background-color: #FFEAA7;"></div>
+                    </div>
+                    <div class="column code-column">
+                        <span class="thread-code">DMC 307</span>
+                    </div>
+                    <div class="column actions-column">
+                        <button class="delete-btn" title="Удалить нитку">
+                            <img src="{% static 'images/icon-delete.png' %}" alt="Удалить" class="delete-icon">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/inventory.js' %}"></script>
+{% endblock %}
