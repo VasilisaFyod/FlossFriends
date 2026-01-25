@@ -88,18 +88,13 @@
     border-radius: 12px;
     overflow: hidden;
     background: #f8f9fa;
-    min-height: 500px;
+    width: 80vh; 
+    height: 80vh;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.pattern-image {
-    max-width: 100%;
-    max-height: 600px;
-    transition: transform 0.3s ease;
-    display: block;
-}
 
 .pattern-overlay {
     position: absolute;
@@ -109,16 +104,6 @@
     bottom: 0;
     pointer-events: none;
     background: rgba(0, 0, 0, 0.03);
-}
-
-.pattern-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
-    padding: 0.75rem;
-    background: #f8f9fa;
-    border-radius: 8px;
 }
 
 .control-btn {
@@ -142,16 +127,6 @@
     transform: scale(1.05);
 }
 
-.zoom-level {
-    margin-left: auto;
-    color: #333;
-    padding: 0.5rem 1rem;
-    background: white;
-    border-radius: 6px;
-    border: 1px solid #e0e0e0;
-    min-width: 60px;
-    text-align: center;
-}
 
 .steps-section {
     background: white;

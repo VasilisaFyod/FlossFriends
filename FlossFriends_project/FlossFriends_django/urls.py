@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from FlossFriends_project import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +30,9 @@ urlpatterns = [
     path("inventory/", views.inventory),
     path("community/", views.community),
     path("publish_pattern/", views.publish_pattern),
-    path("add_image_for_create/", views.add_image_for_create),
-    path("create_pattern_steps/", views.create_pattern_steps)
+    path("add_image_for_create/", views.add_image_for_create, name="add_image_for_create"),
+    path("create_pattern_steps/", views.create_pattern_steps, name="create_pattern_steps")
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

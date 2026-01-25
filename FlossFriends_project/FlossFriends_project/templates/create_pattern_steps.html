@@ -14,15 +14,15 @@
             <div class="progress-bar">
                 <div class="progress-step active" data-step="1">
                     <div class="step-number">1</div>
-                    {% comment %} <div class="step-label">Размеры</div> {% endcomment %}
+                    <div class="step-label">Размеры</div>
                 </div>
                 <div class="progress-step" data-step="2">
                     <div class="step-number">2</div>
-                    {% comment %} <div class="step-label">Цвета</div> {% endcomment %}
+                    <div class="step-label">Цвета</div>
                 </div>
                 <div class="progress-step" data-step="3">
                     <div class="step-number">3</div>
-                    {% comment %} <div class="step-label">Легенда</div> {% endcomment %}
+                    <div class="step-label">Легенда</div>
                 </div>
             </div>
         </div>
@@ -31,60 +31,41 @@
             <div class="pattern-section">
                 <div class="pattern-container">
                     <div class="pattern-wrapper">
-                        <img src="{% static 'images/pattern.jpg' %}" alt="Схема вышивки" class="pattern-image" id="patternImage">
+                        <img id="sourceImage" src="{{ image_url }}" style="display:none;">
+                        <canvas id="patternCanvas"></canvas>
                         <div class="pattern-overlay" id="patternOverlay"></div>
-                    </div>
-                    
-                    <div class="pattern-controls">
-                        <button class="control-btn zoom-in" id="zoomInBtn" title="Увеличить">
-                            <span class="control-icon">+</span>
-                        </button>
-                        <button class="control-btn zoom-out" id="zoomOutBtn" title="Уменьшить">
-                            <span class="control-icon">-</span>
-                        </button>
-                        <button class="control-btn reset-zoom" id="resetZoomBtn" title="Сбросить масштаб">
-                            <span class="control-icon">⟲</span>
-                        </button>
-                        <div class="zoom-level" id="zoomLevel">100%</div>
                     </div>
                 </div>
             </div>
 
             <div class="steps-section">
-                <div class="step-content active" id="step1">    
+                <div class="step-content" id="step1">
                     <div class="dimensions-card">
+                        <div class="colors-slider-group">
+                            <label  class="slider-label">Pазмеры схемы:</label>
+                            <input type="range" class="colors-slider" id="sizeSlider" 
+                                max="100" min="1" step="1">
+                        </div>
+                        
                         <div class="stats-preview">
                             <div class="stat-preview">
                                 <span class="stat-value" id="previewCrosses"></span>
-                                <span class="stat-label">крестиков</span>
-                            </div>
-                        </div>
-                        
-                        <div class="dimensions-inputs">
-                            <div class="dimension-group">
-                                <label class="dimension-label">Высота</label>
-                                <input type="number" class="dimension-input" id="heightInput" value="80" min="10" max="500">
-                                <span class="dimension-unit">крестиков</span>
-                            </div>
-                            
-                            <div class="dimension-group">
-                                <label class="dimension-label">Ширина</label>
-                                <input type="number" class="dimension-input" id="widthInput" value="60" min="10" max="500">
-                                <span class="dimension-unit">крестиков</span>
+                                <span class="stat-label">Общее количество крестиков</span>
                             </div>
                         </div>
                     </div>
                 </div>
+
 
                 <div class="step-content" id="step2">
                     <div class="colors-card">
                         <div class="colors-slider-group">
                             <label class="slider-label">
                                 Количество цветов: 
-                                <span class="slider-value" id="colorsValue">24</span>
+                                <span class="slider-value" id="colorsValue"></span>
                             </label>
                             <input type="range" class="colors-slider" id="colorsSlider" 
-                                   min="1" max="50" value="24" step="1">
+                                   min="1" max="50" step="2">
                         </div>
 
                         <div class="palette-group">
@@ -111,10 +92,8 @@
                             <table class="legend-table">
                                 <thead>
                                     <tr>
-                                        <th>Цвет</th>
                                         <th>Символ</th>
                                         <th>Код нитки</th>
-                                        {% comment %} <th>Кол-во крестиков</th> {% endcomment %}
                                         <th>Длина нитки</th>
                                         <th>Действия</th>
                                     </tr>

@@ -47,25 +47,28 @@
 
             <div class="upload-section">
                 <p class="section-description">Загрузите готовое изображение для создания схемы вышивки</p>
+
+                <!-- 🔹 Форма -->
+                <form method="post" enctype="multipart/form-data" id="uploadForm">
+                    {% csrf_token %}
+                    <input type="file" name="image" id="imageUpload" accept="image/*" style="display: none;">
+                </form>
+
                 <div class="upload-area" id="uploadArea">
                     <div class="upload-placeholder">
-                        <p class="upload-title">Перетащите изображение сюда</h4>
+                        <p class="upload-title">Перетащите изображение сюда</p>
                         <p class="divider-text">или</p>
-                        <button class="create-btn" id="uploadBtn">
+                        <button type="button" class="create-btn" id="uploadBtn">
                             Выберите файл
                         </button>
-                        <input type="file" id="imageUpload" accept="image/*" style="display: none;">
                     </div>
                 </div>
             </div>
-        </div>
 
         <div class="action-buttons">
-            <a href="/create_pattern_steps/" class="nav-link">
-                <button class="create-btn" id="createPatternBtn">
-                    Создать схему
-                </button>
-            </a>
+            <button class="create-btn" id="createPatternBtn">
+                Создать схему
+            </button>
         </div>
     </div>
 </div>
