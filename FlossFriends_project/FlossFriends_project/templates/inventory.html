@@ -9,15 +9,10 @@
 
 {% block content %}
 <div class="page-content">
-    <div class="inventory-header">
-        <h2 class="title">Инвентарь</h2>
-    </div>
 
     <div class="inventory-content">
-        <!--Стили кнопки в файле base.css-->
         <div class="create-section">
-            <button class="create-btn">
-                <span class="plus-icon">+</span>
+            <button class="create-btn" id="add-thread">
                 Добавить нитку
             </button>
         </div>
@@ -32,10 +27,10 @@
             <div class="table-body">
                 <div class="table-row">
                     <div class="column color-column">
-                        <div class="color-swatch" style="background-color: #FF6B6B;"></div>
+                        <div class="color-swatch" style="background-color: #ffffff;"></div>
                     </div>
                     <div class="column code-column">
-                        <span class="thread-code">DMC 666</span>
+                        <span class="thread-code">Гамма 1212</span>
                     </div>
                     <div class="column actions-column">
                         <button class="delete-btn" title="Удалить нитку">
@@ -105,4 +100,17 @@
 </div>
 
 <script src="{% static 'js/inventory.js' %}"></script>
+<div class="modal-overlay" id="addThreadModal">
+    <div class="modal">
+        <div class="modal-color">
+            <div class="color-swatch" style="background-color: #ae509f;"></div>
+            <input type="text" id="threadCodeInput" placeholder="Введите код нитки">
+        </div>
+        <div class="modal-buttons">
+            <button id="saveThreadBtn">Сохранить</button>
+            <button id="cancelThreadBtn">Отмена</button>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

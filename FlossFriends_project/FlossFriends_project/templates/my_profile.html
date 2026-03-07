@@ -10,7 +10,7 @@
 {% block content %}
 <div class="page-content">
     <div class="profile-container">
-        <div class="profile-info-row">
+        <div class="profile-info">
             <div class="avatar-section">
                 <div class="avatar">
                     <img src="{% static 'images/avatar.png' %}" alt="Аватар" class="avatar-img">
@@ -21,26 +21,31 @@
             </div>
             
             <div class="user-info-card">
+                <span class="info-label">Имя пользователя</span>
                 <div class="info-item">
-                    <span class="info-label">Имя пользователя</span>
                     <span class="info-value">Василиса</span>
+                    <button class="edit-btn">
+                        <img src="{% static 'images/edit.png' %}" alt="Редактировать" class="edit-icon">
+                    </button>
                 </div>
+                <span class="info-label">Электронная почта</span>
                 <div class="info-item">
-                    <span class="info-label">Email</span>
                     <span class="info-value">jhhh@mail.ru</span>
+                    <button class="edit-btn">
+                        <img src="{% static 'images/edit.png' %}" alt="Редактировать" class="edit-icon">
+                    </button>
                 </div>
-            </div>
-        </div>
-
-        <div class="about-card">
-            <span class="about-title">О себе</span>
-            <div class="about-content">
-                <p>Люблю вышивать крестиком с детства. Особенно нравятся сложные схемы с природой и животными. В коллекции уже более 50 готовых работ!</p>
+                <span class="info-label">Пароль</span>
+                 <div class="info-item">
+                    <input class="password-value" id="info-password"   type="password" placeholder="Введите новый пароль">
+                    <button class="edit-btn">
+                        <img src="{% static 'images/edit.png' %}" alt="Редактировать" class="edit-icon">
+                    </button>
+                </div>
             </div>
         </div>
 
         <div class="profile-actions">
-            <button class="btn btn-edit">Редактировать профиль</button>
             <button class="btn btn-logout">Выйти</button>
             <button class="btn btn-delete">Удалить профиль</button>
         </div>

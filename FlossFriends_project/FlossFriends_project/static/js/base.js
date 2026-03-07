@@ -29,4 +29,38 @@ document.addEventListener('DOMContentLoaded', function() {
             mainContent.classList.remove('sidebar-open');
         }
     });
+
+    const confirmModal = document.getElementById('confirmModal');
+    const confirmMessage = document.getElementById('confirmMessage');
+    const confirmYes = document.getElementById('confirmYes');
+    const confirmNo = document.getElementById('confirmNo');
+
+    let confirmCallback = null;
+
+    window.showConfirm = function(message, callback) {
+        confirmMessage.textContent = message;
+        confirmModal.classList.add('active');
+        document.body.classList.add('modal-open-delete');
+        confirmCallback = callback;
+    };
+
+    function closeConfirm() {
+        confirmModal.classList.remove('active');
+        document.body.classList.remove('modal-open-delete');
+        confirmCallback = null;
+    }
+
+    confirmYes.addEventListener('click', function() {
+        if (confirmCallback) confirmCallback();
+        closeConfirm();
+    });
+
+    confirmNo.addEventListener('click', closeConfirm);
+
+    confirmModal.addEventListener('click', function(e) {
+        if (e.target === confirmModal) {
+            closeConfirm();
+        }
+    });
+
 });

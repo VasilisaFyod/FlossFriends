@@ -6,6 +6,7 @@
     <title>{% block title %}FlossFriends{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -17,23 +18,32 @@
         <button class="sidebar-close" id="sidebarClose">×</button>
         <nav class="sidebar-nav">
             <a href="/my_profile/" class="nav-link">Мой профиль</a>
-            <a href="/my_patterns/" class="nav-link">Мои схемы</a>
-            <a href="/favorites/" class="nav-link">Избранное</a>
+            <a href="/my_patterns/" class="nav-link">Cхемы</a>
+            {% comment %} <a href="/favorites/" class="nav-link">Избранное</a> {% endcomment %}
             <a href="/inventory/" class="nav-link">Инвентарь</a>
-            <a href="/community/" class="nav-link">Сообщество</a>
-            <a href="//" class="nav-link" style="color: red; padding: 20px 0px;">Выйти</a>
+            {% comment %} <a href="/community/" class="nav-link">Сообщество</a> {% endcomment %}
+            <a href="//" class="nav-link" style="padding: 10px 0px; background: #D65C6A; margin: 30px 0px 0px 0px;">Выйти</a>
         </nav>
     </aside>
 
+    <script src="{% static 'js/base.js' %}"></script>
     <div class="main-content" id="mainContent">
 
         <main>
             {% block content %}
-            <!--контент из дочерних шаблонов -->
             {% endblock %}
         </main>
     </div>
 
-    <script src="{% static 'js/base.js' %}"></script>
+    <div class="confirm-modal-overlay" id="confirmModal">
+        <div class="confirm-modal">
+            <p id="confirmMessage">Вы уверены?</p>
+            <div class="confirm-buttons">
+                <button id="confirmYes">Да</button>
+                <button id="confirmNo">Отмена</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

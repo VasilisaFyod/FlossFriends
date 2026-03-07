@@ -19,64 +19,51 @@
 
     <main class="main-content">
         <div class="container">
-            <a href="/add_image_for_create/" class="create-button">
-                Создать схему
+           <a href="/add_image_for_create/" class="nav-link">
+                <button class="create-btn">
+                    Создать схему
+                </button>
             </a>
-
-            <h2 class="section-title">Популярные схемы</h2>
+{% comment %} <a href="https://www.flaticon.com/ru/free-icons/" title="палитра иконки">Палитра иконки от Freepik - Flaticon</a> {% endcomment %}
+            <h2 class="section-title">Возможности</h2>
             <div class="patterns-grid">
                 <div class="pattern-card">
-                    <a href="/publish_pattern/" class="nav-link">
-                        <div class="pattern-preview">
-                            <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
-                        </div>
-                    </a>
+                    <div class="pattern-preview">
+                        <img src="{% static 'images/pallete.png' %}" alt="Превью схемы" class="preview-img">
+                    </div>
                     <div class="pattern-info">
-                                <h3 class="pattern-title">Название схемы</h3>
-                            </div>
-                        <div class="pattern-actions">
-                            <button class="action-btn add-to-inventory" title="Добавить в инвентарь">
-                                <span class="plus-icon-favorite">+</span>
-                            </button>
-                            <button class="action-btn favorite-btn" title="Добавить в избранное">
-                                <span class="heart-icon">♡</span>
-                            </button>
-                        </div>
+                        <h3 class="pattern-title">Конвертация изображений</h3>
                     </div>
                     
-                    <div class="pattern-card">
-                        <div class="pattern-preview">
-                            <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
-                        </div>
-                        <div class="pattern-info">
-                                <h3 class="pattern-title">Название схемы</h3>
-                            </div>
-                        <div class="pattern-actions">
-                            <button class="action-btn add-to-inventory" title="Добавить в инвентарь">
-                                <span class="plus-icon-favorite">+</span>
-                            </button>
-                            <button class="action-btn favorite-btn" title="Добавить в избранное">
-                                <span class="heart-icon">♡</span>
-                            </button>
-                        </div>
+                </div>
+                    
+                <div class="pattern-card">
+                    <div class="pattern-preview">
+                        <img src="{% static 'images/spools.png' %}" alt="Превью схемы" class="preview-img">
                     </div>
+                    <div class="pattern-info">
+                            <h3 class="pattern-title">Поддержка трех палитр</h3>
+                        </div>
+                    
+                </div>
 
-                    <div class="pattern-card">
-                        <div class="pattern-preview">
-                            <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
-                        </div>
-                        <div class="pattern-info">
-                                <h3 class="pattern-title">Название схемы</h3>
-                            </div>
-                        <div class="pattern-actions">
-                            <button class="action-btn add-to-inventory" title="Добавить в инвентарь">
-                                <span class="plus-icon-favorite">+</span>
-                            </button>
-                            <button class="action-btn favorite-btn" title="Добавить в избранное">
-                                <span class="heart-icon">♡</span>
-                            </button>
-                        </div>
+                <div class="pattern-card">
+                    <div class="pattern-preview">
+                        <img src="{% static 'images/ruler.png' %}" alt="Превью схемы" class="preview-img">
                     </div>
+                    <div class="pattern-info">
+                            <h3 class="pattern-title"> Расчет расхода ниток</h3>
+                        </div>
+                    
+                </div>
+                <div class="pattern-card">
+                    <div class="pattern-preview">
+                        <img src="{% static 'images/ai.png' %}" alt="Превью схемы" class="preview-img">
+                    </div>
+                    <div class="pattern-info">
+                            <h3 class="pattern-title">Генерация по тексту</h3>
+                        </div>
+                    
                 </div>
             </div>
         </div>

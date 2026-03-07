@@ -1,15 +1,22 @@
-document.getElementById('uploadBtn').addEventListener('click', function() {
-        document.getElementById('imageUpload').click();
-    });
+document.addEventListener("DOMContentLoaded", () => {
 
-    // Когда выбран файл, можно сразу показать имя (опционально)
-document.getElementById('imageUpload').addEventListener('change', function() {
-    if(this.files.length > 0){
-        console.log('Выбран файл:', this.files[0].name);
-    }
-});
+    const tabButtons = document.querySelectorAll(".tab-button")
+    const tabContents = document.querySelectorAll(".tab-content")
 
-// Кнопка "Создать схему" сабмитит форму
-document.getElementById('createPatternBtn').addEventListener('click', function() {
-    document.getElementById('uploadForm').submit();
-});
+    tabButtons.forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            const tab = button.dataset.tab
+
+            tabButtons.forEach(btn => btn.classList.remove("active"))
+            tabContents.forEach(content => content.classList.remove("active"))
+
+            button.classList.add("active")
+            document.getElementById(tab + "-tab").classList.add("active")
+
+        })
+
+    })
+
+})

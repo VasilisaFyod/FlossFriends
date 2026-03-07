@@ -9,19 +9,10 @@
 
 {% block content %}
 <div class="page-content">
-    <div class="tabs-container">
-        <div class="tabs">
-            <button class="tab-button active" data-tab="my-patterns">Мои схемы</button>
-            <button class="tab-button" data-tab="published">Опубликованные</button>
-        </div>
-    </div>
-
     <div class="tab-content active" id="my-patterns-tab">
-        <!--Стили кнопки в файле base.css-->
         <div class="create-section">
             <a href="/add_image_for_create/" class="nav-link">
                 <button class="create-btn">
-                    <span class="plus-icon">+</span>
                     Создать схему
                 </button>
             </a>
@@ -33,7 +24,7 @@
                     <button class="menu-toggle">⋮</button>
                     <div class="dropdown-menu">
                         <button class="menu-item">Редактировать</button>
-                        <button class="menu-item">Опубликовать</button>
+                        {% comment %} <button class="menu-item">Опубликовать</button> {% endcomment %}
                         <button class="menu-item delete">Удалить</button>
                     </div>
                 </div>
@@ -50,7 +41,7 @@
                     <button class="menu-toggle">⋮</button>
                     <div class="dropdown-menu">
                         <button class="menu-item">Редактировать</button>
-                        <button class="menu-item">Опубликовать</button>
+                        {% comment %} <button class="menu-item">Опубликовать</button> {% endcomment %}
                         <button class="menu-item delete">Удалить</button>
                     </div>
                 </div>
@@ -58,32 +49,41 @@
                     <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
                 </div>
                 <div class="pattern-info">
-                    <h3 class="pattern-title">Название схемы</h3>
+                    <h3 class="pattern-title">Название схемыfapsgamg'akdmg'kamgkangkanekgnaerng</h3>
                 </div>
             </div>
-
-        </div>
-    </div>
-
-    <div class="tab-content" id="published-tab">
-        <div class="patterns-grid">
             <div class="pattern-card">
                 <div class="pattern-menu">
                     <button class="menu-toggle">⋮</button>
                     <div class="dropdown-menu">
                         <button class="menu-item">Редактировать</button>
-                        <button class="menu-item">Снять с публикации</button>
+                        {% comment %} <button class="menu-item">Опубликовать</button> {% endcomment %}
                         <button class="menu-item delete">Удалить</button>
                     </div>
                 </div>
                 <div class="pattern-preview">
-                    <span class="published-badge">Опубликовано</span>
                     <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
                 </div>
                 <div class="pattern-info">
                     <h3 class="pattern-title">Название схемы</h3>
                 </div>
-            </div>
+            </div> 
+            <div class="pattern-card">
+                <div class="pattern-menu">
+                    <button class="menu-toggle">⋮</button>
+                    <div class="dropdown-menu">
+                        <button class="menu-item">Редактировать</button>
+                        {% comment %} <button class="menu-item">Опубликовать</button> {% endcomment %}
+                        <button class="menu-item delete">Удалить</button>
+                    </div>
+                </div>
+                <div class="pattern-preview">
+                    <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
+                </div>
+                <div class="pattern-info">
+                    <h3 class="pattern-title">Название схемы</h3>
+                </div>
+            </div> 
         </div>
     </div>
 </div>

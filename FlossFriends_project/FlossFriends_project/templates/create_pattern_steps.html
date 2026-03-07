@@ -10,6 +10,8 @@
 {% block content %}
 <div class="page-content">
     <div class="pattern-steps-container">
+
+        <!-- Прогресс-бар -->
         <div class="progress-section">
             <div class="progress-bar">
                 <div class="progress-step active" data-step="1">
@@ -27,7 +29,9 @@
             </div>
         </div>
 
+        <!-- Основной контент схемы -->
         <div class="pattern-main-content">
+            <!-- Изображение схемы -->
             <div class="pattern-section">
                 <div class="pattern-container">
                     <div class="pattern-wrapper">
@@ -38,54 +42,67 @@
                 </div>
             </div>
 
+            <!-- Шаги настройки -->
             <div class="steps-section">
-                <div class="step-content" id="step1">
+
+                <!-- Шаг 1: Размеры -->
+                <div class="step-content active" id="step1">
                     <div class="dimensions-card">
-                        <div class="colors-slider-group">
-                            <label  class="slider-label">Pазмеры схемы:</label>
-                            <input type="range" class="colors-slider" id="sizeSlider" 
-                                max="100" min="1" step="1">
-                        </div>
-                        
                         <div class="stats-preview">
                             <div class="stat-preview">
-                                <span class="stat-value" id="previewCrosses"></span>
-                                <span class="stat-label">Общее количество крестиков</span>
+                                <span style="font-weight: normal;" class="stat-value" id="previewCrosses"></span>
+                                <span class="stat-label">количество крестиков</span>
                             </div>
+                        </div>
+                        <div>
+                            <input type="range" class="colors-slider" id="sizeSlider" max="100" min="1" step="1">
                         </div>
                     </div>
                 </div>
 
-
+                <!-- Шаг 2: Цвета -->
                 <div class="step-content" id="step2">
                     <div class="colors-card">
                         <div class="colors-slider-group">
-                            <label class="slider-label">
-                                Количество цветов: 
-                                <span class="slider-value" id="colorsValue"></span>
-                            </label>
-                            <input type="range" class="colors-slider" id="colorsSlider" 
-                                   min="1" max="50" step="2">
+                            <div class="stat-preview">
+                                <span style="font-weight: normal;" class="stat-value" id="colorsValue"></span>
+                                <span class="stat-label">цветов</span>
+                            </div>
+                            <div>
+                                <input type="range" class="colors-slider" id="colorsSlider" min="1" max="50" step="2">
+                            </div>
                         </div>
-
                         <div class="palette-group">
                             <label class="palette-label">Палитра ниток</label>
-                            <select class="palette-select" id="paletteSelect">
-                                <option value="dmc">DMC</option>
-                                <option value="anchor">Гамма</option>
-                            </select>
+
+                            <div class="custom-select" id="paletteSelect">
+                                <div class="select-selected">DMC</div>
+
+                                <div class="select-items">
+                                    <div data-value="dmc">DMC</div>
+                                    <div data-value="anchor">Гамма</div>
+                                </div>
+                            </div>
                         </div>
+
+
                     </div>
                 </div>
 
+                <!-- Шаг 3: Легенда -->
                 <div class="step-content" id="step3">
                     <div class="legend-card">
                         <div class="calculation-settings">
                             <label class="calculation-label">Расчет длины в:</label>
-                            <select class="calculation-select" id="calculationSelect">
-                                <option value="meters">метрах</option>
-                                <option value="skeins">мотках</option>
-                            </select>
+
+                            <div class="custom-select">
+                                <div class="select-selected">метрах</div>
+
+                                <div class="select-items">
+                                    <div data-value="meters">метрах</div>
+                                    <div data-value="skeins">мотках</div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="legend-table-container">
@@ -98,26 +115,22 @@
                                         <th>Действия</th>
                                     </tr>
                                 </thead>
-                                <tbody id="legendTableBody">
-                                </tbody>
+                                <tbody id="legendTableBody"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
+        <!-- Навигация между шагами -->
         <div class="navigation-buttons">
-            <button class="create-btn" id="prevBtn" style="background: rgba(204, 134, 94, 0.96)">
-                Назад
-            </button>
-            <button class="create-btn" id="nextBtn">
-                Далее
-            </button>
-            <button class="create-btn" id="finishBtn">
-                Готово
-            </button>
+            <button class="create-btn" id="prevBtn" style="background: rgba(214, 92, 106, 0.8)">Назад</button>
+            <button class="create-btn" id="nextBtn">Далее</button>
+            <button class="create-btn" id="finishBtn">Готово</button>
         </div>
+
     </div>
 </div>
 
