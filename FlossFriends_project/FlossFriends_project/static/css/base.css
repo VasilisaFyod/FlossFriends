@@ -114,6 +114,16 @@ button {
 .nav-link:hover { 
     transform: translateX(5px);
 }
+.btn-exit {
+    color: white;         
+    text-decoration: none; 
+    font-size: 20px;  
+    font-weight: lighter;
+    text-align: center;
+    background: none;
+    border: none;   
+}
+
 
 main {
     padding: 2rem;
@@ -136,6 +146,7 @@ main {
     visibility: hidden;
     transition: 0.3s;
     z-index: 1000;
+    background: rgba(0,0,0,0.4);
 }
 
 .confirm-modal-overlay.active {
@@ -209,7 +220,7 @@ body.modal-open-delete .page-content {
     .sidebar-toggle {
         font-size: 30px;
     }
-    .nav-link {
+    .nav-link, .btn-exit {
         font-size: 15px;  
     }
 }

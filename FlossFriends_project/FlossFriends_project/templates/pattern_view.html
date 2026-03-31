@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Просмотр схемы - FlossFriends{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pattern_view.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="pattern-steps-container">
+        <div class="pattern-main-content">
+            <div class="pattern-section">
+                <div class="pattern-container">
+                    <div class="pattern-wrapper">
+                        <img id="sourceImage" src="data:image/png;base64,{{ request.session.temp_image }}" style="display:none;">
+                        <canvas id="patternCanvas"></canvas>
+                        <div class="canvas-controls">
+                            <button id="zoomInBtn">+</button>
+                            <button id="zoomOutBtn">−</button>
+                            <button id="resetViewBtn">⟲</button>
+                        </div>
+                        <div class="pattern-overlay" id="patternOverlay"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="steps-section">
+                <div class="step-content" id="step3">
+                    <div class="legend-card">
+                        <div class="calculation-settings">
+                            <label class="calculation-label">Расчет длины в:</label>
+
+                            <div class="custom-select">
+                                <div class="select-selected">см</div>
+
+                                <div class="select-items">
+                                    <div data-value="meters">см</div>
+                                    <div data-value="skeins">мотках</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="legend-table-container">
+                            <table class="legend-table">
+                                <thead>
+                                    <tr>
+                                        <th>Символ</th>
+                                        <th>Код нитки</th>
+                                        <th>Длина нитки</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="legendTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="navigation-buttons">
+            <button class="create-btn" id="prevBtn" style="background: rgba(214, 92, 106, 0.8)">Выйти</button>
+        </div>
+
+    </div>
+</div>
+
+<script src="{% static 'js/pattern_view.js' %}"></script>
+{% endblock %}

@@ -65,25 +65,20 @@
 
             <div class="upload-section">
 
-                <p class="section-description">
-                    Загрузите изображение
-                </p>
-
                 <form method="post" enctype="multipart/form-data" id="uploadForm">
                     {% csrf_token %}
                     <input type="file" name="image" id="imageUpload" accept="image/*" hidden>
                 </form>
 
                 <div class="upload-area" id="uploadArea">
-
                     <p class="upload-title">Перетащите изображение</p>
-
                     <p class="divider-text">или</p>
+                    <button type="button" class="create-btn" id="uploadBtn">Выберите файл</button>
+                    <p id="fileError" style="color:red; display:none; padding:1rem 0rem;"></p>
+                </div>
 
-                    <button type="button" class="create-btn" id="uploadBtn">
-                        Выберите файл
-                    </button>
-
+                <div class="preview-area" id="previewContainer">
+                    <img id="previewImg" class="preview-img" /> 
                 </div>
 
             </div>
@@ -91,11 +86,7 @@
         </div>
 
         <div class="action-buttons">
-           <a href="/create_pattern_steps/">
-                <button class="create-btn">
-                    Создать схему
-                </button>
-            </a>
+            <button class="create-btn" id="createPatternBtn">Создать схему</button>
         </div>
 
     </div>

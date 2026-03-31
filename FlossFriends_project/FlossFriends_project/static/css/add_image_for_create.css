@@ -72,11 +72,25 @@
     padding:3rem;
     text-align:center;
 }
+#uploadArea.dragover {
+    border: 3px dashed #3b82f6; 
+}
 
 .upload-title{
     margin-bottom:10px;
 }
-
+.preview-area{
+    padding: 2rem;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.preview-img {
+    max-width: 300px;
+    max-height: 100%;
+}
 .divider-text{
     color:#666;
     margin:10px 0;

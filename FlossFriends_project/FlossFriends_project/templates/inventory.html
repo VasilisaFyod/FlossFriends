@@ -25,92 +25,55 @@
             </div>
 
             <div class="table-body">
+                {% for item in items %}
                 <div class="table-row">
                     <div class="column color-column">
-                        <div class="color-swatch" style="background-color: #ffffff;"></div>
+                        <div class="color-swatch" style="background-color: {{ item.thread.hex_value }};"></div>
                     </div>
-                    <div class="column code-column">
-                        <span class="thread-code">Гамма 1212</span>
-                    </div>
-                    <div class="column actions-column">
-                        <button class="delete-btn" title="Удалить нитку">
-                            <img src="{% static 'images/icon-delete.png' %}" alt="Удалить" class="delete-icon">
-                        </button>
-                    </div>
-                </div>
 
-                <div class="table-row">
-                    <div class="column color-column">
-                        <div class="color-swatch" style="background-color: #4ECDC4;"></div>
-                    </div>
                     <div class="column code-column">
-                        <span class="thread-code">DMC 991</span>
+                        <span class="thread-code">{{ item.thread.palette.name_palette }} - {{ item.thread.code }}</span>
                     </div>
-                    <div class="column actions-column">
-                        <button class="delete-btn" title="Удалить нитку">
-                            <img src="{% static 'images/icon-delete.png' %}" alt="Удалить" class="delete-icon">
-                        </button>
-                    </div>
-                </div>
 
-                <div class="table-row">
-                    <div class="column color-column">
-                        <div class="color-swatch" style="background-color: #45B7D1;"></div>
-                    </div>
-                    <div class="column code-column">
-                        <span class="thread-code">DMC 798</span>
-                    </div>
                     <div class="column actions-column">
-                        <button class="delete-btn" title="Удалить нитку">
-                            <img src="{% static 'images/icon-delete.png' %}" alt="Удалить" class="delete-icon">
+                        <button type="button" class="delete-btn" 
+                                data-form-id="deleteForm{{ item.thread.thread_id }}">
+                            <img src="{% static 'images/icon-delete.png' %}" class="delete-icon">
                         </button>
+                        <form method="POST" action="{% url 'delete_thread' item.thread.thread_id %}" 
+                            id="deleteForm{{ item.thread.thread_id }}">
+                            {% csrf_token %}
+                        </form>
                     </div>
-                </div>
 
-                <div class="table-row">
-                    <div class="column color-column">
-                        <div class="color-swatch" style="background-color: #96CEB4;"></div>
-                    </div>
-                    <div class="column code-column">
-                        <span class="thread-code">DMC 369</span>
-                    </div>
-                    <div class="column actions-column">
-                        <button class="delete-btn" title="Удалить нитку">
-                            <img src="{% static 'images/icon-delete.png' %}" alt="Удалить" class="delete-icon">
-                        </button>
-                    </div>
-                </div>
 
-                <div class="table-row">
-                    <div class="column color-column">
-                        <div class="color-swatch" style="background-color: #FFEAA7;"></div>
-                    </div>
-                    <div class="column code-column">
-                        <span class="thread-code">DMC 307</span>
-                    </div>
-                    <div class="column actions-column">
-                        <button class="delete-btn" title="Удалить нитку">
-                            <img src="{% static 'images/icon-delete.png' %}" alt="Удалить" class="delete-icon">
-                        </button>
-                    </div>
                 </div>
+                {% empty %}
+                    <p>Инвентарь пуст</p>
+                {% endfor %}
             </div>
+
         </div>
     </div>
 </div>
 
-<script src="{% static 'js/inventory.js' %}"></script>
-<div class="modal-overlay" id="addThreadModal">
-    <div class="modal">
-        <div class="modal-color">
-            <div class="color-swatch" style="background-color: #ae509f;"></div>
-            <input type="text" id="threadCodeInput" placeholder="Введите код нитки">
-        </div>
-        <div class="modal-buttons">
-            <button id="saveThreadBtn">Сохранить</button>
-            <button id="cancelThreadBtn">Отмена</button>
+<form method="POST" action="{% url 'add_thread' %}">
+    {% csrf_token %}
+    <div class="modal-overlay" id="addThreadModal">
+        <div class="modal">
+            <div class="modal-color">
+                <div class="color-swatch" id="previewColor"></div>
+                <input type="text" id="threadCodeInput" name="code" placeholder="Введите код нитки" required>
+            </div>
+            <div id="searchResults"></div>
+            <div class="modal-buttons">
+                <button type="submit">Сохранить</button>
+                <button type="button" id="cancelThreadBtn">Отмена</button>
+            </div>
+            <p id="modalError" style="color: red;" class="modal-error"></p>
         </div>
     </div>
-</div>
+</form>
+<script src="{% static 'js/inventory.js' %}"></script>
 
 {% endblock %}

@@ -1,32 +1,60 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const confirmModal = document.getElementById("confirmModal");
+    const message = document.getElementById("confirmMessage");
+    const yesBtn = document.getElementById("confirmYes");
+    const noBtn = document.getElementById("confirmNo");
+
+    message.innerText = "Вы уверены, что хотите удалить схему?";
+    let currentFormId = null;
+
+   document.querySelectorAll('.delete').forEach(btn => {
+        btn.addEventListener('click', function() {
+            currentFormId = this.dataset.formId; 
+            confirmModal.classList.add("active");
+        });
+    });
+
+    yesBtn.addEventListener('click', function() {
+        if (currentFormId) {
+            const form = document.getElementById(currentFormId);
+            if (form) {
+                form.submit();
+                confirmModal.classList.remove("active");
+            } else {
+                console.error("Форма с id", currentFormId, "не найдена!");
+            }
+        }
+    });
+
+    noBtn.addEventListener('click', function() {
+        confirmModal.classList.remove("active");
+    });
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
 
     function closeAllMenus() {
-        document.querySelectorAll('.pattern-menu.active').forEach(menu => {
+        document.querySelectorAll('.pattern-menu').forEach(menu => {
             menu.classList.remove('active');
         });
     }
 
-    function handleToggleClick(event) {
-        event.stopPropagation(); 
-        const menu = this.closest('.pattern-menu');
-        const isActive = menu.classList.contains('active');
+    // обработка меню ⋮
+    document.querySelectorAll('.menu-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function (event) {
+            event.stopPropagation();
 
-        closeAllMenus(); 
+            const menu = this.closest('.pattern-menu');
+            const isActive = menu.classList.contains('active');
 
-        if (!isActive) {
-            menu.classList.add('active'); 
-        }
-    }
+            closeAllMenus();
 
-    function initMenuHandlers() {
-        document.querySelectorAll('.menu-toggle').forEach(toggle => {
-            toggle.removeEventListener('click', handleToggleClick);
-            toggle.addEventListener('click', handleToggleClick);
+            if (!isActive) {
+                menu.classList.add('active');
+            }
         });
-    }
+    });
 
+    // переключение вкладок
     tabButtons.forEach(button => {
         button.addEventListener('click', function() {
             const targetTab = this.getAttribute('data-tab');
@@ -37,33 +65,20 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('active');
             document.getElementById(`${targetTab}-tab`).classList.add('active');
 
-            closeAllMenus(); 
+            closeAllMenus();
         });
     });
 
+    // клик вне — закрывает меню
     document.addEventListener('click', function() {
         closeAllMenus();
     });
 
+    // Esc закрывает
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
             closeAllMenus();
         }
     });
 
-    initMenuHandlers();
-
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                if (mutation.target.classList.contains('active')) {
-                    setTimeout(initMenuHandlers, 50);
-                }
-            }
-        });
-    });
-
-    tabContents.forEach(content => {
-        observer.observe(content, { attributes: true });
-    });
 });

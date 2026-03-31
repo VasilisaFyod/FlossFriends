@@ -18,72 +18,38 @@
             </a>
         </div>
 
-        <div class="patterns-grid">
+       <div class="patterns-grid">
+            {% for pattern in patterns %}
             <div class="pattern-card">
-                <div class="pattern-menu">
-                    <button class="menu-toggle">⋮</button>
-                    <div class="dropdown-menu">
-                        <button class="menu-item">Редактировать</button>
-                        {% comment %} <button class="menu-item">Опубликовать</button> {% endcomment %}
-                        <button class="menu-item delete">Удалить</button>
-                    </div>
-                </div>
-                <div class="pattern-preview">
-                    <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
-                </div>
-                <div class="pattern-info">
-                    <h3 class="pattern-title">Название схемы</h3>
-                </div>
-            </div>
 
-            <div class="pattern-card">
                 <div class="pattern-menu">
-                    <button class="menu-toggle">⋮</button>
+                    <button class="menu-toggle">⋮</button>  
                     <div class="dropdown-menu">
-                        <button class="menu-item">Редактировать</button>
-                        {% comment %} <button class="menu-item">Опубликовать</button> {% endcomment %}
-                        <button class="menu-item delete">Удалить</button>
+                        <a href="{% url 'edit_pattern' pattern.pattern_id %}" class="menu-item">
+                            Редактировать
+                        </a>
+                        <button type="button" class="menu-item delete" 
+                                data-form-id="deleteForm{{ pattern.pattern_id }}">
+                            Удалить
+                        </button>
+                        <form method="POST" action="{% url 'delete_pattern' pattern.pattern_id %}" 
+                            id="deleteForm{{ pattern.pattern_id }}">
+                            {% csrf_token %}
+                        </form>
                     </div>
                 </div>
+
                 <div class="pattern-preview">
-                    <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
+                    <img src="{{ MEDIA_URL }}{{ pattern.image_preview }}" class="preview-img">
                 </div>
+
                 <div class="pattern-info">
-                    <h3 class="pattern-title">Название схемыfapsgamg'akdmg'kamgkangkanekgnaerng</h3>
+                    <h3 class="pattern-title">{{ pattern.title }}</h3>
                 </div>
+
             </div>
-            <div class="pattern-card">
-                <div class="pattern-menu">
-                    <button class="menu-toggle">⋮</button>
-                    <div class="dropdown-menu">
-                        <button class="menu-item">Редактировать</button>
-                        {% comment %} <button class="menu-item">Опубликовать</button> {% endcomment %}
-                        <button class="menu-item delete">Удалить</button>
-                    </div>
-                </div>
-                <div class="pattern-preview">
-                    <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
-                </div>
-                <div class="pattern-info">
-                    <h3 class="pattern-title">Название схемы</h3>
-                </div>
-            </div> 
-            <div class="pattern-card">
-                <div class="pattern-menu">
-                    <button class="menu-toggle">⋮</button>
-                    <div class="dropdown-menu">
-                        <button class="menu-item">Редактировать</button>
-                        {% comment %} <button class="menu-item">Опубликовать</button> {% endcomment %}
-                        <button class="menu-item delete">Удалить</button>
-                    </div>
-                </div>
-                <div class="pattern-preview">
-                    <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
-                </div>
-                <div class="pattern-info">
-                    <h3 class="pattern-title">Название схемы</h3>
-                </div>
-            </div> 
+            {% endfor %}
+
         </div>
     </div>
 </div>

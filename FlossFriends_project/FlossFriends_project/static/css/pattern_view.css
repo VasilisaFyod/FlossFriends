@@ -1,0 +1,286 @@
+.pattern-main-content {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-direction: column;
+}
+
+.pattern-section {
+    background: none;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.pattern-container,
+.pattern-wrapper {
+    position: relative;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f8f9fa;
+    width: 100%;
+    height: 65vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.pattern-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.03);
+}
+.canvas-controls {
+    position: absolute;
+    bottom: 10px;
+    display: flex;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 5px 10px;
+    border-radius: 8px;
+    z-index: 10; 
+}
+
+.canvas-controls button:hover {
+    background: #d3d0cd;
+}
+
+.canvas-controls button {
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #F6F3EE;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.stat-preview{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 20px;
+}
+.steps-section {
+    background: none;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.step-content {
+    flex: 1;
+    flex-direction: column;
+}
+
+.step-content.active {
+    display: flex;
+}
+
+.legend-card {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.calculation-settings
+ {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.palette-label,
+.calculation-label {
+    font-weight: normal;
+    font-size: 18px;
+}
+.palette-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.custom-select{
+    position:relative;
+    width:100%;
+    font-size:14px;
+}
+
+.palette-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.custom-select{
+    position:relative;
+    width:100%;
+    font-size:14px;
+}
+
+/* выбранный элемент */
+.select-selected{
+    padding:12px 40px 12px 14px;
+    border-radius:10px;
+    background:white;
+    cursor:pointer;
+    color:#2e7d32;
+    border:1px solid #eee;
+    position:relative;
+}
+
+/* стрелка */
+.select-selected::after{
+    content:"▾";
+    position:absolute;
+    right:14px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:14px;
+    color:#2e7d32;
+    pointer-events:none;
+    transition:transform 0.2s ease;
+}
+
+/* поворот стрелки при открытии */
+.custom-select.open .select-selected::after{
+    transform:translateY(-50%) rotate(180deg);
+}
+
+/* выпадающий список */
+.select-items{
+    position:absolute;
+    top:100%;
+    left:0;
+    right:0;
+
+    background:white;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+
+    display:none;
+    overflow:hidden;
+}
+
+/* элементы */
+.select-items div{
+    padding:12px 14px;
+    cursor:pointer;
+    color:#2e7d32;
+}
+
+.select-items div:hover{
+    background:#f3f8f3;
+}
+
+/* Таблица легенды */
+.legend-table-container {
+    flex: 1;
+    overflow-y: auto;
+    border-color: none;
+    background: none;
+}
+.legend-card {
+    height: 450px;
+    max-height: 450px;
+    overflow: hidden;
+}
+
+.legend-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.symbol {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    font-weight: bold;
+    border: 2px solid black;
+    color: black;
+}
+.legend-table th,
+.legend-table td {
+    font-size: 15px;
+    font-weight: 300;
+    padding: 0.2rem;
+    text-align: center;
+    vertical-align: middle;
+    height: 40px;
+}
+
+.legend-color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    border: 2px solid #e0e0e0;
+}
+
+/* Кнопки навигации */
+.navigation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* Адаптивность */
+@media (max-width: 1000px) {
+    .pattern-main-content {
+        grid-template-columns: 1fr;
+    }
+    .navigation-buttons {
+
+        justify-content: space-around;
+    }
+}
+
+@media (max-width: 600px) {
+   
+    .navigation-buttons {
+        flex-direction: column;
+    }
+    .legend-table-container {
+        overflow-x: auto;
+    }
+    .calculation-settings {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .create-btn{
+        padding: 1rem 3rem;
+        font-size: 15px;
+    }
+    .navigation-buttons {
+        align-items: center;
+    }
+    .stat-preview {
+        font-size: 17px;
+    }
+     .stat-value {
+        font-size: 17px;
+    }
+        .palette-label, .calculation-label {
+        font-size: 15px;
+    }
+    .legend-table th, .legend-table td {
+        font-size: 12px;
+        padding: 0.7rem;
+    }
+    .steps-section {
+        padding: 1rem;
+    }
+    .pattern-container, .pattern-wrapper {
+        height: 35vh;
+    }
+}

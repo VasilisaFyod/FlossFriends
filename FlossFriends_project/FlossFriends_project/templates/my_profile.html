@@ -14,41 +14,51 @@
             <div class="avatar-section">
                 <div class="avatar">
                     <img src="{% static 'images/avatar.png' %}" alt="Аватар" class="avatar-img">
-                    <div class="avatar-overlay">
-                        <span>✎</span>
-                    </div>
                 </div>
             </div>
             
-            <div class="user-info-card">
+            <form method="POST" action="{% url 'my_profile' %}" class="user-info-card">
+                {% csrf_token %}
+                
                 <span class="info-label">Имя пользователя</span>
                 <div class="info-item">
-                    <span class="info-value">Василиса</span>
-                    <button class="edit-btn">
-                        <img src="{% static 'images/edit.png' %}" alt="Редактировать" class="edit-icon">
-                    </button>
+                    <input type="text" name="username" value="{{ user.username }}" class="info-value">
                 </div>
+
                 <span class="info-label">Электронная почта</span>
                 <div class="info-item">
-                    <span class="info-value">jhhh@mail.ru</span>
-                    <button class="edit-btn">
-                        <img src="{% static 'images/edit.png' %}" alt="Редактировать" class="edit-icon">
-                    </button>
+                    <input type="email" name="email" value="{{ user.email }}" class="info-value">
                 </div>
+
                 <span class="info-label">Пароль</span>
-                 <div class="info-item">
-                    <input class="password-value" id="info-password"   type="password" placeholder="Введите новый пароль">
-                    <button class="edit-btn">
-                        <img src="{% static 'images/edit.png' %}" alt="Редактировать" class="edit-icon">
-                    </button>
+                <div class="info-item">
+                    <input type="password" name="password" placeholder="Введите новый пароль" class="password-value">
                 </div>
-            </div>
+
+                <button type="submit" class="btn btn-save">Сохранить изменения</button>
+
+                {% if error %}
+                    <p style="color:red">{{ error }}</p>
+                {% elif success %}
+                    <p style="color:green">{{ success }}</p>
+                {% endif %}
+            </form>
         </div>
 
         <div class="profile-actions">
-            <button class="btn btn-logout">Выйти</button>
-            <button class="btn btn-delete">Удалить профиль</button>
+            <button type="submit" class="btn btn-logout" onclick="openExitModal()">Выйти</button>
+            
+            <button class="btn btn-delete" onclick="openDeleteModal()">Удалить профиль</button>
+            
+            
         </div>
+        <form id="exitForm" method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+        </form>
+        <form id="deleteForm" method="POST" action="{% url 'delete_profile' %}">
+            {% csrf_token %}
+        </form>
     </div>
 </div>
+<script src="{% static 'js/my_profile.js' %}"></script>
 {% endblock %}

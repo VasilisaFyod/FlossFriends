@@ -11,7 +11,6 @@
 <div class="page-content">
     <div class="pattern-steps-container">
 
-        <!-- Прогресс-бар -->
         <div class="progress-section">
             <div class="progress-bar">
                 <div class="progress-step active" data-step="1">
@@ -29,49 +28,74 @@
             </div>
         </div>
 
-        <!-- Основной контент схемы -->
         <div class="pattern-main-content">
-            <!-- Изображение схемы -->
             <div class="pattern-section">
                 <div class="pattern-container">
                     <div class="pattern-wrapper">
-                        <img id="sourceImage" src="{{ image_url }}" style="display:none;">
+                        {% if pattern %}
+                            <img id="sourceImage" src="{{ MEDIA_URL }}{{ pattern.image_original }}" style="display:none;">
+                        {% else %}
+                            <img id="sourceImage" src="data:image/png;base64,{{ request.session.temp_image }}" style="display:none;">
+                        {% endif %}
                         <canvas id="patternCanvas"></canvas>
                         <div class="pattern-overlay" id="patternOverlay"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Шаги настройки -->
             <div class="steps-section">
-
-                <!-- Шаг 1: Размеры -->
                 <div class="step-content active" id="step1">
-                    <div class="dimensions-card">
-                        <div class="stats-preview">
-                            <div class="stat-preview">
-                                <span style="font-weight: normal;" class="stat-value" id="previewCrosses"></span>
-                                <span class="stat-label">количество крестиков</span>
+                    <div class="colors-card">
+                        <div class="dimensions-card">
+                            <div class="colors-slider-group">
+                                <div class="stat-preview">
+                                    <span class="stat-value" id="crossesSize"></span>
+                                    <span class="stat-label">размер в крестиках</span>
+                                </div>
+                            </div>
+    
+                            <div class="colors-slider-group">
+                                <div class="stat-preview">
+                                    <span class="stat-value" id="fabricSize"></span>
+                                    <span class="stat-label">размер ткани (см)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <input type="range" class="colors-slider" id="sizeSlider" min=1 max=100 step=1>
                             </div>
                         </div>
-                        <div>
-                            <input type="range" class="colors-slider" id="sizeSlider" max="100" min="1" step="1">
+                        <div class="palette-group">
+                            <label class="palette-label">Тип канвы:</label>
+                            <div class="custom-select" id="typeSelect">
+                                <div class="select-selected">Aida 14</div>
+                                <div class="select-items">
+                                    <div data-value="Aida 14">Aida 14</div>
+                                    <div data-value="Aida 16">Aida 16</div>
+                                    <div data-value="Aida 18">Aida 18</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Шаг 2: Цвета -->
                 <div class="step-content" id="step2">
                     <div class="colors-card">
                         <div class="colors-slider-group">
+                            <div class="stat-preview">
+                                <span style="font-weight: normal;" class="stat-value" id="colorsValueUsed"></span>
+                                <span class="stat-label">цветов реально на схеме</span>
+                            </div>
                             <div class="stat-preview">
                                 <span style="font-weight: normal;" class="stat-value" id="colorsValue"></span>
                                 <span class="stat-label">цветов</span>
                             </div>
                             <div>
-                                <input type="range" class="colors-slider" id="colorsSlider" min="1" max="50" step="2">
+                                <input type="range" class="colors-slider" min=1 id="colorsSlider">
+                                
                             </div>
                         </div>
+                        
+
                         <div class="palette-group">
                             <label class="palette-label">Палитра ниток</label>
 
@@ -79,8 +103,8 @@
                                 <div class="select-selected">DMC</div>
 
                                 <div class="select-items">
-                                    <div data-value="dmc">DMC</div>
-                                    <div data-value="anchor">Гамма</div>
+                                    <div data-value="DMC">DMC</div>
+                                    <div data-value="Gamma">Gamma</div>
                                 </div>
                             </div>
                         </div>
@@ -89,17 +113,16 @@
                     </div>
                 </div>
 
-                <!-- Шаг 3: Легенда -->
                 <div class="step-content" id="step3">
                     <div class="legend-card">
                         <div class="calculation-settings">
                             <label class="calculation-label">Расчет длины в:</label>
 
                             <div class="custom-select">
-                                <div class="select-selected">метрах</div>
+                                <div class="select-selected">см</div>
 
                                 <div class="select-items">
-                                    <div data-value="meters">метрах</div>
+                                    <div data-value="meters">см</div>
                                     <div data-value="skeins">мотках</div>
                                 </div>
                             </div>
@@ -124,15 +147,44 @@
             </div>
         </div>
 
-        <!-- Навигация между шагами -->
         <div class="navigation-buttons">
             <button class="create-btn" id="prevBtn" style="background: rgba(214, 92, 106, 0.8)">Назад</button>
             <button class="create-btn" id="nextBtn">Далее</button>
             <button class="create-btn" id="finishBtn">Готово</button>
         </div>
-
+        
     </div>
 </div>
+
+<div id="errorBox" class="error-box"></div>
+<div class="modal-overlay" id="savePatternModal">
+    <div class="modal">
+        <input type="text" id="titlePattern"
+       value="{% if pattern %}{{ pattern.title }}{% endif %}"
+       maxlength="255"
+       placeholder="Введите название схемы">
+
+        <div class="modal-buttons">
+            <button id="saveBtn">Сохранить</button>
+            <button id="cancelBtn">Отмена</button>
+        </div>
+    </div>
+</div>
+<script>
+    const existingPattern = {% if pattern %}
+        {
+            id: {{ pattern.pattern_id }},
+            width: {{ pattern.size_width }},
+            height: {{ pattern.size_height }},
+            canvas: "{{ pattern.canvas.name }}",
+            palette: "{{ palette }}",
+            data: `{{ pattern.pattern_data|escapejs }}`,
+            legend: {{ legend|safe }}
+        }
+    {% else %}
+        null
+    {% endif %};
+</script>
 
 <script src="{% static 'js/create_pattern_steps.js' %}"></script>
 {% endblock %}

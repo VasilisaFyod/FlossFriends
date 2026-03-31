@@ -22,19 +22,23 @@
             {% comment %} <a href="/favorites/" class="nav-link">Избранное</a> {% endcomment %}
             <a href="/inventory/" class="nav-link">Инвентарь</a>
             {% comment %} <a href="/community/" class="nav-link">Сообщество</a> {% endcomment %}
-            <a href="//" class="nav-link" style="padding: 10px 0px; background: #D65C6A; margin: 30px 0px 0px 0px;">Выйти</a>
+            
+            <form class="nav-link" style="padding: 10px 0px; background: #D65C6A; margin: 30px 0px 0px 0px;" method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+                <button class="btn-exit" >Выйти</button>
+            </form>
+
         </nav>
     </aside>
 
-    <script src="{% static 'js/base.js' %}"></script>
     <div class="main-content" id="mainContent">
-
+        
         <main>
             {% block content %}
             {% endblock %}
         </main>
     </div>
-
+    
     <div class="confirm-modal-overlay" id="confirmModal">
         <div class="confirm-modal">
             <p id="confirmMessage">Вы уверены?</p>
@@ -44,6 +48,7 @@
             </div>
         </div>
     </div>
+    <script src="{% static 'js/base.js' %}"></script>
 
 </body>
 </html>
