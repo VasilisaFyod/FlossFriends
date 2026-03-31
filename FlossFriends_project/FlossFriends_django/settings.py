@@ -1,5 +1,9 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Загружаем переменные из .env файла
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -67,7 +71,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'mssql',
         'NAME': 'Floss_friends',
-        'HOST': 'DESKTOP-67VCCKN\\SQLEXPRESS',
+        'HOST': os.getenv('DB_HOST', 'localhost\\SQLEXPRESS'), #так же остальные вынести в файл
         'OPTIONS': {
             'driver': 'ODBC Driver 18 for SQL Server',
             'extra_params': 'Encrypt=yes;TrustServerCertificate=yes;',

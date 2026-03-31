@@ -8,19 +8,10 @@ class Palette(models.Model):
     palette_id = models.AutoField(primary_key=True)
     name_palette = models.CharField(unique=True, max_length=50, db_collation='Cyrillic_General_CI_AS')
 
-    class Meta:
-        managed = False
-        db_table = 'Palette'
-
 class Canvas(models.Model):
     canvas_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     count_per_cm = models.DecimalField(max_digits=5, decimal_places=2)
-
-    class Meta:
-        managed = False
-        db_table = 'Canvas'
-
 
 class Pattern(models.Model):
     pattern_id = models.AutoField(primary_key=True)
@@ -39,12 +30,6 @@ class Pattern(models.Model):
     updated_date = models.DateTimeField(null=True, blank=True)
     colors_count = models.IntegerField()
 
-    class Meta:
-        managed = False
-        db_table = 'Pattern'
-
-
-
 class Thread(models.Model):
     thread_id = models.IntegerField(primary_key=True)
     palette = models.ForeignKey(Palette, on_delete=models.CASCADE)
@@ -56,11 +41,7 @@ class Thread(models.Model):
     hex_value = models.CharField(max_length=7)
 
     class Meta:
-        managed = False
-        db_table = 'Thread'
         unique_together = (('palette', 'code'),)
-
-
 
 class Threadcalculation(models.Model):
     thread_calculation_id = models.AutoField(primary_key=True)
@@ -71,11 +52,7 @@ class Threadcalculation(models.Model):
     symbol = models.CharField(max_length=10)
 
     class Meta:
-        managed = False
-        db_table = 'ThreadCalculation'
         unique_together = (('pattern', 'thread'),)
-
-
 
 class Threadinventory(models.Model):
     thread_inventory_id = models.AutoField(primary_key=True)
@@ -85,12 +62,6 @@ class Threadinventory(models.Model):
     )
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
     skeins_count = models.IntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'ThreadInventory'
-       
-
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
@@ -108,6 +79,4 @@ class Sysdiagrams(models.Model):
     definition = models.BinaryField(blank=True, null=True)
 
     class Meta:
-        managed = False
-        db_table = 'sysdiagrams'
         unique_together = (('principal_id', 'name'),)
