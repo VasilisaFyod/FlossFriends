@@ -3,7 +3,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from FlossFriends_project.views import auth_views, page_views, api_views
+from FlossFriends_project.views import auth_views, page_views, api_views, generate_api
 
 urlpatterns = [
     # 🔹 Админка
@@ -43,6 +43,7 @@ urlpatterns = [
     path('api/pattern/<int:pattern_id>/', api_views.get_pattern_api, name='get_pattern_api'),
     path('api/pattern/<int:pattern_id>/update/', api_views.update_pattern_api, name='update_pattern_api'),
 
+    path('generate-image/', generate_api.generate_image_api, name='generate_image_api'),
 ]
 
 if settings.DEBUG:

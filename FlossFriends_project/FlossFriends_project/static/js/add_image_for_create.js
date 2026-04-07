@@ -8,14 +8,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const createPatternBtn = document.getElementById("createPatternBtn")
     const previewContainer = document.getElementById("previewContainer")
     const previewImg = document.getElementById("previewImg")
-    const fileError = document.getElementById("fileError")  
+    const fileError = document.getElementById("fileError")
+    
+    // AI элементы
+    const generateAiBtn = document.getElementById("generateAiBtn")
+    const promptInput = document.getElementById("promptInput")
+    const aiGeneratedImage = document.getElementById("aiGeneratedImage")
+    const aiResultContainer = document.getElementById("aiResultContainer")
+    const useAiImageBtn = document.getElementById("useAiImageBtn")
+    const regenerateBtn = document.getElementById("regenerateBtn")
+    
+    let currentGeneratedBlob = null
     
     const savedImage = sessionStorage.getItem("tempImage"); 
     if (savedImage) {
         previewImg.src = savedImage;
         previewContainer.style.display = "flex";
     }
-    
     
     function getCookie(name) {
         let cookieValue = null;
@@ -43,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     })
     
-    // восстановление вкладки
     const savedTab = localStorage.getItem("activeTab");
     if (savedTab) {
         const tabBtn = document.querySelector(`.tab-button[data-tab="${savedTab}"]`);
@@ -95,20 +103,102 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 
-    // окно загрузки
-    createPatternBtn.addEventListener("click", async () => {
+    // Функция генерации через бэкенд
+    async function generateImageWithHuggingFace(prompt) {
+    const response = await fetch("/generate-image/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: prompt })
+    });
+    
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Ошибка генерации");
+    }
+    
+    const result = await response.blob();
+    return result;
+}
 
+    // Генерация изображения
+    async function generateImage() {
+        const prompt = promptInput.value.trim();
+        
+        if (!prompt) {
+            alert("Пожалуйста, введите описание изображения");
+            return;
+        }
+
+        aiResultContainer.style.display = "block";
+        const originalText = generateAiBtn.textContent;
+        generateAiBtn.textContent = "Генерация...";
+        generateAiBtn.disabled = true;
+        regenerateBtn.disabled = true;
+        aiGeneratedImage.style.opacity = "0.5";
+
+        try {
+            const blob = await generateImageWithHuggingFace(prompt);
+            currentGeneratedBlob = blob;
+            
+            const imageUrl = URL.createObjectURL(blob);
+            aiGeneratedImage.src = imageUrl;
+            aiGeneratedImage.style.opacity = "1";
+            
+        } catch (error) {
+            console.error("Ошибка генерации:", error);
+            alert("Ошибка при генерации изображения: " + error.message);
+        } finally {
+            generateAiBtn.textContent = originalText;
+            generateAiBtn.disabled = false;
+            regenerateBtn.disabled = false;
+        }
+    }
+
+    // Использовать сгенерированное изображение
+    function useGeneratedImage() {
+        if (!currentGeneratedBlob) {
+            alert("Сначала сгенерируйте изображение");
+            return;
+        }
+
+        const file = new File([currentGeneratedBlob], "ai_generated.png", { type: "image/png" });
+        
+        showPreview(file);
+        
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        imageUpload.files = dataTransfer.files;
+        
+        const uploadTab = document.querySelector('.tab-button[data-tab="upload"]');
+        if (uploadTab) uploadTab.click();
+    }
+
+    // Обработчики событий для AI
+    if (generateAiBtn) {
+        generateAiBtn.addEventListener("click", generateImage);
+    }
+    
+    if (regenerateBtn) {
+        regenerateBtn.addEventListener("click", generateImage);
+    }
+    
+    if (useAiImageBtn) {
+        useAiImageBtn.addEventListener("click", useGeneratedImage);
+    }
+
+    // Создание схемы
+    createPatternBtn.addEventListener("click", async () => {
         const savedImage = sessionStorage.getItem("tempImage");
 
-        // если файл уже загружали и вернулись назад
         if (!imageUpload.files.length && savedImage) {
             window.location.href = "/create_pattern_steps/";
             return;
         }
 
-        // если файла вообще нет
         if (!imageUpload.files.length) {
-            alert("Пожалуйста, выберите изображение.");
+            alert("Пожалуйста, выберите или сгенерируйте изображение.");
             return;
         }
 
@@ -138,7 +228,6 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error(error);
             alert("Ошибка сети.");
         }
-
     });
 
 })

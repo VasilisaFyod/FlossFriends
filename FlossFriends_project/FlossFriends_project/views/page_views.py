@@ -179,7 +179,14 @@ def add_image_for_create(request):
         request.session["temp_image"] = base64.b64encode(buffer.getvalue()).decode() 
         image_url = "data:image/png;base64," + request.session["temp_image"] 
         return JsonResponse({"image_url": image_url}) 
-    return render(request, "add_image_for_create.html")
+
+
+    return render(
+        request,
+        "add_image_for_create.html",
+        {"hf_token": os.environ.get("HF_TOKEN", "")},
+    )
+
 
 @login_required(login_url='/login/') 
 def create_pattern_steps(request): 
