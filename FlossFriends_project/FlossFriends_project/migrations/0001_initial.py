@@ -4,7 +4,6 @@ import django.contrib.auth.models
 import django.contrib.auth.validators
 import django.utils.timezone
 import uuid
-from django.conf import settings
 from django.db import migrations, models
 
 
@@ -53,7 +52,7 @@ class Migration(migrations.Migration):
                 ('created_date', models.DateTimeField()),
                 ('updated_date', models.DateTimeField(blank=True, null=True)),
                 ('colors_count', models.IntegerField()),
-                ('user', models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
+                ('user', models.ForeignKey('CustomUser', on_delete=models.CASCADE)),
                 ('canvas', models.ForeignKey('Canvas', on_delete=models.CASCADE)),
             ],
             options={
@@ -113,7 +112,7 @@ class Migration(migrations.Migration):
             name='Threadinventory',
             fields=[
                 ('thread_inventory_id', models.AutoField(primary_key=True, serialize=False)),
-                ('user', models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
+                ('user', models.ForeignKey('CustomUser', on_delete=models.CASCADE)),
                 ('thread', models.ForeignKey('Thread', on_delete=models.CASCADE)),
                 ('skeins_count', models.IntegerField()),
             ],
