@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.menu-toggle').forEach(toggle => {
         toggle.addEventListener('click', function (event) {
             event.stopPropagation();
+            event.preventDefault();
 
             const menu = this.closest('.pattern-menu');
             const isActive = menu.classList.contains('active');
@@ -51,6 +52,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!isActive) {
                 menu.classList.add('active');
             }
+        });
+    });
+
+    document.querySelectorAll('.pattern-menu').forEach(menu => {
+        menu.addEventListener('click', function (event) {
+            event.stopPropagation();
         });
     });
 
@@ -69,12 +76,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // клик вне — закрывает меню
     document.addEventListener('click', function() {
         closeAllMenus();
     });
 
-    // Esc закрывает
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
             closeAllMenus();

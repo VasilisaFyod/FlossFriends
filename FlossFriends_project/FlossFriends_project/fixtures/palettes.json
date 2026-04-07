@@ -1,0 +1,16 @@
+[
+{
+  "model": "FlossFriends_project.palette",
+  "pk": 1,
+  "fields": {
+    "name_palette": "DMC"
+  }
+},
+{
+  "model": "FlossFriends_project.palette",
+  "pk": 2,
+  "fields": {
+    "name_palette": "Gamma"
+  }
+}
+]

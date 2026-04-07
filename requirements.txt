@@ -1,0 +1,15 @@
+﻿asgiref==3.11.1
+Django==6.0.2
+django-mssql-backend==2.8.1
+joblib==1.5.3
+mssql-django==1.7
+numpy==2.4.3
+pillow==12.1.1
+python-dotenv==1.0.0
+pyodbc==5.3.0
+pytz==2026.1.post1
+scikit-learn==1.8.0
+scipy==1.17.1
+sqlparse==0.5.5
+threadpoolctl==3.6.0
+tzdata==2025.3

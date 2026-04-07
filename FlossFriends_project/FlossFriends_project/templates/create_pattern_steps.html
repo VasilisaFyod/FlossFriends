@@ -67,7 +67,7 @@
                         <div class="palette-group">
                             <label class="palette-label">Тип канвы:</label>
                             <div class="custom-select" id="typeSelect">
-                                <div class="select-selected">Aida 14</div>
+                                <div class="select-selected">{% if pattern %}{{ pattern.canvas.name }}{% else %}Aida 14{% endif %}</div>
                                 <div class="select-items">
                                     <div data-value="Aida 14">Aida 14</div>
                                     <div data-value="Aida 16">Aida 16</div>
@@ -100,7 +100,7 @@
                             <label class="palette-label">Палитра ниток</label>
 
                             <div class="custom-select" id="paletteSelect">
-                                <div class="select-selected">DMC</div>
+                                <div class="select-selected">{% if pattern %}{{ palette }}{% else %}DMC{% endif %}</div>
 
                                 <div class="select-items">
                                     <div data-value="DMC">DMC</div>
@@ -178,6 +178,7 @@
             height: {{ pattern.size_height }},
             canvas: "{{ pattern.canvas.name }}",
             palette: "{{ palette }}",
+            image_original: "{{ MEDIA_URL }}{{ pattern.image_original }}",
             data: `{{ pattern.pattern_data|escapejs }}`,
             legend: {{ legend|safe }}
         }

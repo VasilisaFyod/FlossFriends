@@ -150,4 +150,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             }; 
         }); 
     });
+
+    // ===== Кнопка Выйти =====
+    const prevBtn = document.getElementById('prevBtn');
+    if (prevBtn) {
+        prevBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            console.log('Кнопка Выйти нажата');
+            window.location.href = '/my_patterns/';
+        });
+    } else {
+        console.log('Кнопка prevBtn не найдена');
+    }
 });

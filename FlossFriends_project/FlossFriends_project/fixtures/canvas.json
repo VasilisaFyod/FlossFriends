@@ -1,0 +1,26 @@
+[
+{
+  "model": "FlossFriends_project.canvas",
+  "pk": 1,
+  "fields": {
+    "name": "Aida 14",
+    "count_per_cm": "5.50"
+  }
+},
+{
+  "model": "FlossFriends_project.canvas",
+  "pk": 2,
+  "fields": {
+    "name": "Aida 16",
+    "count_per_cm": "6.30"
+  }
+},
+{
+  "model": "FlossFriends_project.canvas",
+  "pk": 3,
+  "fields": {
+    "name": "Aida 18",
+    "count_per_cm": "7.10"
+  }
+}
+]

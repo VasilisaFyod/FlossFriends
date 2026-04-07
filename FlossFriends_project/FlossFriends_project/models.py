@@ -9,7 +9,6 @@ class Palette(models.Model):
     name_palette = models.CharField(unique=True, max_length=50, db_collation='Cyrillic_General_CI_AS')
 
     class Meta:
-        managed = False
         db_table = 'Palette'
 
 class Canvas(models.Model):
@@ -18,7 +17,6 @@ class Canvas(models.Model):
     count_per_cm = models.DecimalField(max_digits=5, decimal_places=2)
 
     class Meta:
-        managed = False
         db_table = 'Canvas'
 
 
@@ -40,7 +38,6 @@ class Pattern(models.Model):
     colors_count = models.IntegerField()
 
     class Meta:
-        managed = False
         db_table = 'Pattern'
 
 
@@ -56,7 +53,6 @@ class Thread(models.Model):
     hex_value = models.CharField(max_length=7)
 
     class Meta:
-        managed = False
         db_table = 'Thread'
         unique_together = (('palette', 'code'),)
 
@@ -71,7 +67,6 @@ class Threadcalculation(models.Model):
     symbol = models.CharField(max_length=10)
 
     class Meta:
-        managed = False
         db_table = 'ThreadCalculation'
         unique_together = (('pattern', 'thread'),)
 
@@ -87,7 +82,6 @@ class Threadinventory(models.Model):
     skeins_count = models.IntegerField()
 
     class Meta:
-        managed = False
         db_table = 'ThreadInventory'
        
 
@@ -108,6 +102,5 @@ class Sysdiagrams(models.Model):
     definition = models.BinaryField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'sysdiagrams'
         unique_together = (('principal_id', 'name'),)

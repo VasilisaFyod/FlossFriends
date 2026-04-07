@@ -8,9 +8,28 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import base64
+from PIL import Image, ImageDraw
 
 from ..models import Pattern, Palette, Thread, Canvas, Threadcalculation
 from ..services.pattern_generator import generate_pattern
+
+def generate_pattern_preview(cells, width, height):
+    """Генерирует превью схемы как изображение"""
+    cell_size = 10  # пикселей на клетку
+    img_width = width * cell_size
+    img_height = height * cell_size
+    image = Image.new('RGB', (img_width, img_height), 'white')
+    draw = ImageDraw.Draw(image)
+    
+    for y, row in enumerate(cells):
+        for x, cell in enumerate(row):
+            if cell.get('code') is not None:  # не прозрачный
+                draw.rectangle(
+                    [x * cell_size, y * cell_size, (x + 1) * cell_size, (y + 1) * cell_size],
+                    fill=(cell['r'], cell['g'], cell['b'])
+                )
+    
+    return image
 
 @csrf_exempt
 def generate_pattern_api(request):
@@ -80,13 +99,22 @@ def save_pattern_api(request):
             canvas=canvas,
             title=data.get("title", "Без названия"),
             image_original=filename,
-            image_preview=filename,
+            image_preview=filename,  # временно
             pattern_data=json.dumps({"cells": data["cells"]}),
             size_width=data["width"],
             size_height=data["height"],
             created_date=timezone.now(),
             colors_count=len(data.get("legend", []))
         )
+
+        # Генерируем превью схемы
+        cells = data["cells"]
+        preview_image = generate_pattern_preview(cells, data["width"], data["height"])
+        preview_filename = f"preview_{uuid.uuid4()}.png"
+        preview_filepath = os.path.join(settings.MEDIA_ROOT, preview_filename)
+        preview_image.save(preview_filepath, 'PNG')
+        pattern.image_preview = preview_filename
+        pattern.save()
 
         # сохраняем легенду с символами
         for item in data.get("legend", []):
@@ -174,6 +202,21 @@ def update_pattern_api(request, pattern_id):
 
     pattern.updated_date = timezone.now()
     pattern.save()
+
+    # Генерируем новое превью схемы
+    cells = data.get("cells", [])
+    if cells:
+        preview_image = generate_pattern_preview(cells, pattern.size_width, pattern.size_height)
+        preview_filename = f"preview_{uuid.uuid4()}.png"
+        preview_filepath = os.path.join(settings.MEDIA_ROOT, preview_filename)
+        preview_image.save(preview_filepath, 'PNG')
+        # Удаляем старое превью, если оно не оригинал
+        if pattern.image_preview and pattern.image_preview != pattern.image_original:
+            old_preview_path = os.path.join(settings.MEDIA_ROOT, pattern.image_preview)
+            if os.path.exists(old_preview_path):
+                os.remove(old_preview_path)
+        pattern.image_preview = preview_filename
+        pattern.save()
 
     # Удаляем старые расчеты ниток и сохраняем новые
     Threadcalculation.objects.filter(pattern=pattern).delete()

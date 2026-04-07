@@ -23,12 +23,13 @@ document.querySelectorAll(".custom-select").forEach(select => {
         }; 
     }); 
 });
-document.getElementById("typeSelect").querySelectorAll(".select-items div")
+document.getElementById("typeSelect")?.querySelectorAll(".select-items div")
 .forEach(option => {
     option.addEventListener("click", () => {
         if (patternCreator) {
             patternCreator.updateFabricSize();
-            patternCreator.updateLegendUnits(); // ✅ пересчёт мотков по новой канве
+            patternCreator.updateLegendUnits(); 
+            patternCreator.updateColors();
         }
     });
 });
@@ -46,13 +47,13 @@ class PatternCreator {
     constructor(imageUrl) {
         this.sourceImage = new Image();
         this.sourceImage.src = imageUrl;
-        
+
         this.patternCanvas = document.getElementById('patternCanvas');
         this.sizeSlider = document.getElementById('sizeSlider');
         this.colorsSlider = document.getElementById('colorsSlider');
         this.colorsValue = document.getElementById('colorsValue');
         this.colorsValueUsed = document.getElementById('colorsValueUsed');
-        
+
         this.patternData = { width: 50, height: 50 };
         this.patternCells = [];
         this.currentCellSize = 0;
@@ -60,59 +61,33 @@ class PatternCreator {
         this.currentOffsetY = 0;
         this.controller = null;
         this.canvasList = [];
-        
+
         this.isEdit = existingPattern !== null;
+
         this.sourceImage.onload = async () => {
             this.drawPattern();
+            await this.loadCanvasData();
 
             if (this.isEdit) {
-                this.loadExistingPattern();
-                
-                // 1️⃣ Слайдеры
-                this.sizeSlider.value = this.patternData.width;
-                if(this.colorsSlider) this.colorsSlider.value = this.lastLegend.length;
-
-                // 2️⃣ Легенда
-                this.updateLegendTable(this.lastLegend);
-                if(this.colorsValueUsed) this.colorsValueUsed.textContent = this.lastLegend.length;
-
-                // 3️⃣ Канва
-                this.calculateGrid();
-                this.drawPatternGrid(this.currentCellSize, this.currentOffsetX, this.currentOffsetY);
-
+                await this.loadExistingPattern();
             } else {
                 this.updatePatternSizeDebounced();
                 this.initColorSettings();
             }
-
-            this.canvasList = await this.fetchCanvasData();
-            this.updateFabricSize();
         };
-
 
         this.sizeSlider.addEventListener('input', () => this.updatePatternSizeDebounced());
         this.colorsSlider?.addEventListener('input', this.debounce(() => this.updateColors(), 150));
     }
-    loadExistingPattern() {
+
+    async loadCanvasData() {
         try {
-            const parsed = JSON.parse(existingPattern.data);
-            this.patternData.width = existingPattern.width;
-            this.patternData.height = existingPattern.height;
-            this.patternCells = parsed.cells || [];
-            
-            // 🔹 загружаем legend отдельно
-            this.lastLegend = existingPattern.legend || [];
-            
-            console.log("COLORS BEFORE SEND:", this.state.colors);
-            this.calculateGrid();
-            this.drawPatternGrid(this.currentCellSize, this.currentOffsetX, this.currentOffsetY);
-            this.updateLegendTable(this.lastLegend);
-            
-        } catch(e) {
-            console.error("Ошибка загрузки паттерна", e);
+            this.canvasList = await this.fetchCanvasData();
+        } catch (e) {
+            console.error("Ошибка загрузки канвы", e);
+            this.canvasList = [];
         }
     }
-
 
     async fetchCanvasData() {
         try {
@@ -126,20 +101,26 @@ class PatternCreator {
     }
 
     getCanvasCountPerCm() {
+        if (!this.canvasList || this.canvasList.length === 0) return 5.5;
+
         const selectedName = this.getSelectedCanvasName();
         const canvas = this.canvasList.find(c => c.name === selectedName);
+
         return canvas ? parseFloat(canvas.count_per_cm) : 5.5;
     }
 
+
+
     getSelectedCanvasName() {
         const select = document.getElementById("typeSelect");
-        const selectedText = select?.querySelector(".select-selected")?.textContent;
-        const items = select.querySelectorAll(".select-items div");
-        for (let item of items) {
-            if (item.textContent === selectedText) return item.dataset.value;
-        }
-        return '';
+        const selectedDiv = select?.querySelector(".select-selected");
+        if (!selectedDiv) return '';
+        const selectedValue = selectedDiv.textContent.trim();
+
+        const canvas = this.canvasList.find(c => c.name === selectedValue);
+        return canvas ? canvas.name : '';
     }
+
 
     getSelectedPalette() {
         const select = document.getElementById("paletteSelect");
@@ -153,12 +134,55 @@ class PatternCreator {
     }
     getSelectedLengthUnit() {
         const select = document.querySelector("#step3 .custom-select");
-        const selected = select?.querySelector(".select-selected")?.textContent;
+        const selected = select?.querySelector(".select-selected")?.textContent || "";
 
         if (selected.includes("см")) return "cm";
         if (selected.includes("мотк")) return "skeins";
 
         return "cm";
+    }
+
+    setCustomSelectValue(selector, value) {
+        if (!value) return;
+        const select = document.querySelector(selector);
+        const selectedDiv = select?.querySelector('.select-selected');
+        if (selectedDiv) selectedDiv.textContent = value;
+    }
+
+    async loadExistingPattern() {
+        try {
+            const parsed = JSON.parse(existingPattern.data);
+            this.patternData.width = existingPattern.width;
+            this.patternData.height = existingPattern.height;
+            this.patternCells = parsed.cells || [];
+            
+            // 🔹 загружаем legend отдельно
+            this.lastLegend = existingPattern.legend || [];
+
+            // 🔹 устанавливаем селекты перед загрузкой данных по палитре
+            this.setCustomSelectValue('#paletteSelect', existingPattern.palette);
+            this.setCustomSelectValue('#typeSelect', existingPattern.canvas);
+
+            this.calculateGrid();
+            this.drawPatternGrid(this.currentCellSize, this.currentOffsetX, this.currentOffsetY);
+            this.updateLegendTable(this.lastLegend);
+            this.updateFabricSize();
+
+            await this.updateColorsSliderRange();
+            if (this.colorsSlider) {
+                const currentColors = Math.max(1, Math.min(this.lastLegend.length || 1, parseInt(this.colorsSlider.max)));
+                this.colorsSlider.value = currentColors;
+                this.colorsValue.textContent = currentColors;
+            }
+
+            if (this.sizeSlider) {
+                const widthBasedValue = Math.min(this.sizeSlider.max, Math.max(1, Math.round(this.patternData.width)));
+                this.sizeSlider.value = widthBasedValue;
+            }
+
+        } catch(e) {
+            console.error("Ошибка загрузки паттерна", e);
+        }
     }
 
     updatePatternSizeDebounced() {
@@ -174,8 +198,9 @@ class PatternCreator {
             this.patternData.height = Math.max(1, Math.floor((sliderValue / this.sizeSlider.max) * maxCrosses));
             this.patternData.width = Math.max(1, Math.floor(this.patternData.height * (imgWidth / imgHeight)));
         }
+
         this.calculateGrid();
-        this.updateFabricSize();   
+        this.updateFabricSize();
         this.updateColors();
     }
 
@@ -253,12 +278,15 @@ class PatternCreator {
         }
     }
     updateFabricSize() {
-        if (!patternCreator) return;
+        if (!this.patternCanvas) return;
         const countPerCm = this.getCanvasCountPerCm();
-        const widthCm = (this.patternData.width / countPerCm).toFixed(1);
-        const heightCm = (this.patternData.height / countPerCm).toFixed(1);
+
+        const widthCm = Math.max(1, this.patternData.width / countPerCm).toFixed(1);
+        const heightCm = Math.max(1, this.patternData.height / countPerCm).toFixed(1);
+
         const fabricSizeEl = document.getElementById('fabricSize');
         if (fabricSizeEl) fabricSizeEl.textContent = `${widthCm} x ${heightCm} см`;
+
         const crossesEl = document.getElementById('crossesSize');
         if (crossesEl) crossesEl.textContent = `${this.patternData.width} x ${this.patternData.height}`;
     }
@@ -293,11 +321,9 @@ class PatternCreator {
         tempCanvas.height = 100;
         const ctx = tempCanvas.getContext('2d');
 
-        ctx.fillStyle = "#fff";
-        ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
         ctx.drawImage(this.sourceImage, 0, 0, tempCanvas.width, tempCanvas.height);
 
-        const imageBase64 = tempCanvas.toDataURL();
+        const imageBase64 = tempCanvas.toDataURL('image/png');
 
         try {
             const res = await fetch('/api/generate-pattern/', {
@@ -353,7 +379,7 @@ class PatternCreator {
         if (unit === "skeins") {
             const countPerCm = this.getCanvasCountPerCm();
             const meters = lengthCm / 100;
-            const skeinLengthMeters = 8;
+            const skeinLengthMeters = 8.7;
             let skeins = meters / skeinLengthMeters;
             if (skeins < 1) skeins = 1;
             skeins = Math.ceil(skeins);
@@ -400,8 +426,6 @@ class PatternCreator {
         });
     }
     updateLegendUnits() {
-        if (!this.patternCells.length) return;
-
         // просто перерисовываем таблицу с текущими данными
         this.updateLegendTable(this.lastLegend || []);
     }
@@ -447,13 +471,15 @@ class PatternCreator {
                     cellSize
                 );
 
-                // 🔹 3. Символ (чёрный или белый для контраста)
-                ctx.fillStyle = this.getContrastColor(cell.r, cell.g, cell.b);
-                ctx.fillText(
-                    cell.symbol,
-                    x * cellSize + offsetX + cellSize / 2,
-                    y * cellSize + offsetY + cellSize / 2
-                );
+                // 🔹 3. Символ (чёрный или белый для контраста), только если не прозрачный
+                if (cell.code !== null) {
+                    ctx.fillStyle = this.getContrastColor(cell.r, cell.g, cell.b);
+                    ctx.fillText(
+                        cell.symbol,
+                        x * cellSize + offsetX + cellSize / 2,
+                        y * cellSize + offsetY + cellSize / 2
+                    );
+                }
             }
         }
     }
@@ -481,8 +507,8 @@ class PatternCreationSteps {
         this.saveButton = document.getElementById('saveBtn');
         this.cancelButton = document.getElementById('cancelBtn');
         this.savePatternModal = document.getElementById('savePatternModal');
-        this.saveButton.addEventListener('click', () => this.savePattern());
-        this.cancelButton.addEventListener('click', () => this.closeModal());
+        if (this.saveButton) this.saveButton.addEventListener('click', () => this.savePattern());
+        if (this.cancelButton) this.cancelButton.addEventListener('click', () => this.closeModal());
 
 
         this.finishBtn.style.display = 'none';
@@ -496,9 +522,9 @@ class PatternCreationSteps {
     }
 
     bindEvents() {
-        this.prevBtn.addEventListener('click', () => this.previousStep());
-        this.nextBtn.addEventListener('click', () => this.nextStep());
-        this.finishBtn.addEventListener('click', () => this.finishCreation());
+        if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.previousStep());
+        if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.nextStep());
+        if (this.finishBtn) this.finishBtn.addEventListener('click', () => this.finishCreation());
     }
 
     nextStep() {
@@ -628,7 +654,7 @@ class PatternCreationSteps {
             return;
         }
         let imageData = patternCreator.sourceImage.src;
-        if (!imageData.includes("base64")) imageData = existingPattern.image_original;
+        if (!imageData.includes("base64")) imageData = existingPattern?.image_original || imageData;
 
         const data = {
             title: title, // 🔥 ВАЖНО
