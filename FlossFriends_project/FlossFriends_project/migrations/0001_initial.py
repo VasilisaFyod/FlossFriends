@@ -4,6 +4,7 @@ import django.contrib.auth.models
 import django.contrib.auth.validators
 import django.utils.timezone
 import uuid
+from django.conf import settings
 from django.db import migrations, models
 
 
@@ -25,7 +26,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'Canvas',
-                'managed': False,
+                'managed': True,
             },
         ),
         migrations.CreateModel(
@@ -36,7 +37,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'Palette',
-                'managed': False,
+                'managed': True,
             },
         ),
         migrations.CreateModel(
@@ -52,10 +53,12 @@ class Migration(migrations.Migration):
                 ('created_date', models.DateTimeField()),
                 ('updated_date', models.DateTimeField(blank=True, null=True)),
                 ('colors_count', models.IntegerField()),
+                ('user', models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
+                ('canvas', models.ForeignKey('Canvas', on_delete=models.CASCADE)),
             ],
             options={
                 'db_table': 'Pattern',
-                'managed': False,
+                'managed': True,
             },
         ),
         migrations.CreateModel(
@@ -69,13 +72,14 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'sysdiagrams',
-                'managed': False,
+                'managed': True,
             },
         ),
         migrations.CreateModel(
             name='Thread',
             fields=[
                 ('thread_id', models.IntegerField(primary_key=True, serialize=False)),
+                ('palette', models.ForeignKey('Palette', on_delete=models.CASCADE)),
                 ('code', models.CharField(max_length=20)),
                 ('name', models.CharField(max_length=100)),
                 ('rgb_r', models.IntegerField()),
@@ -85,31 +89,37 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'Thread',
-                'managed': False,
+                'managed': True,
+                'unique_together': (('palette', 'code'),),
             },
         ),
         migrations.CreateModel(
             name='Threadcalculation',
             fields=[
                 ('thread_calculation_id', models.AutoField(primary_key=True, serialize=False)),
+                ('pattern', models.ForeignKey('Pattern', on_delete=models.CASCADE)),
+                ('thread', models.ForeignKey('Thread', on_delete=models.CASCADE)),
                 ('crosses_count', models.IntegerField()),
                 ('length_cm', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('symbol', models.CharField(max_length=10)),
             ],
             options={
                 'db_table': 'ThreadCalculation',
-                'managed': False,
+                'managed': True,
+                'unique_together': (('pattern', 'thread'),),
             },
         ),
         migrations.CreateModel(
             name='Threadinventory',
             fields=[
                 ('thread_inventory_id', models.AutoField(primary_key=True, serialize=False)),
+                ('user', models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
+                ('thread', models.ForeignKey('Thread', on_delete=models.CASCADE)),
                 ('skeins_count', models.IntegerField()),
             ],
             options={
                 'db_table': 'ThreadInventory',
-                'managed': False,
+                'managed': True,
             },
         ),
         migrations.CreateModel(
