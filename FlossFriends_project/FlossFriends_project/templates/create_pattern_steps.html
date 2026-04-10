@@ -170,6 +170,29 @@
         </div>
     </div>
 </div>
+<div class="thread-replacement-modal-overlay" id="threadReplacementModal" style="display:none;" aria-hidden="true">
+    <div class="thread-replacement-modal" role="dialog" aria-modal="true" aria-labelledby="threadReplacementTitle">
+        <h3 id="threadReplacementTitle">Замена нитки</h3>
+        <div class="thread-replacement-pair">
+            <div class="thread-replacement-card">
+                <p class="thread-replacement-label">Заменяемая</p>
+                <div class="thread-replacement-color" id="fromThreadColor"></div>
+                <p class="thread-replacement-code" id="fromThreadCode"></p>
+                <p class="thread-replacement-name" id="fromThreadName"></p>
+            </div>
+            <div class="thread-replacement-arrow">→</div>
+            <div class="thread-replacement-card">
+                <p class="thread-replacement-label">Замена</p>
+                <div class="thread-replacement-color" id="toThreadColor"></div>
+                <p class="thread-replacement-code" id="toThreadCode"></p>
+                <p class="thread-replacement-name" id="toThreadName"></p>
+            </div>
+        </div>
+        <div class="thread-replacement-actions">
+            <button type="button" data-close-replacement-modal>Закрыть</button>
+        </div>
+    </div>
+</div>
 <script>
     const existingPattern = {% if pattern %}
         {

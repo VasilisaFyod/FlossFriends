@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Мои схемы - FlossFriends{% endblock %}
@@ -9,6 +9,45 @@
 
 {% block content %}
 <div class="page-content">
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab-button active" data-tab="my-patterns">Все схемы</button>
+            <button class="tab-button" data-tab="published">Опубликованные</button>
+        </div>
+    </div>
+
+    <div class="publish-modal-overlay" id="publishModal">
+        <div class="publish-modal" role="dialog" aria-modal="true" aria-labelledby="publishModalTitle">
+            <h3 class="publish-modal-title" id="publishModalTitle">Опубликовать схему</h3>
+            <p class="publish-modal-subtitle">
+                Выберите от 1 до 3 категорий. После этого схема появится во вкладке "Опубликованные".
+            </p>
+
+            <form method="POST" action="{% url 'publish_pattern_from_my_patterns' %}" id="publishPatternForm">
+                {% csrf_token %}
+                <input type="hidden" name="pattern_id" id="publishPatternId">
+
+                <div class="publish-categories">
+                    {% for category in categories %}
+                    <label class="publish-category-option">
+                        <input type="checkbox" name="categories" value="{{ category.category_id }}">
+                        <span>{{ category.name }}</span>
+                    </label>
+                    {% empty %}
+                    <p class="publish-categories-empty">Категории пока не добавлены.</p>
+                    {% endfor %}
+                </div>
+
+                <p class="publish-modal-error" id="publishModalError">Выберите от 1 до 3 категорий.</p>
+
+                <div class="publish-modal-actions">
+                    <button type="button" class="publish-cancel-btn" id="publishModalCancel">Отмена</button>
+                    <button type="submit" class="publish-submit-btn" id="publishModalSubmit">Опубликовать</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="tab-content active" id="my-patterns-tab">
         <div class="create-section">
             <a href="/add_image_for_create/" class="nav-link">
@@ -36,20 +75,89 @@
                         <a href="{% url 'edit_pattern' pattern.pattern_id %}" class="menu-item">
                             Редактировать
                         </a>
+                        <button
+                            type="button"
+                            class="menu-item publish-pattern-btn"
+                            data-pattern-id="{{ pattern.pattern_id }}"
+                            data-pattern-title="{{ pattern.title|escape }}"
+                            data-is-public="{% if pattern.is_public %}true{% else %}false{% endif %}"
+                            data-selected-categories="{% for category in pattern.categories.all %}{{ category.category_id }}{% if not forloop.last %},{% endif %}{% endfor %}">
+                            {% if pattern.is_public %}Изменить публикацию{% else %}Опубликовать{% endif %}
+                        </button>
                         <button type="button" class="menu-item delete" 
                                 data-form-id="deleteForm{{ pattern.pattern_id }}">
                             Удалить
                         </button>
                     </div>
                 </div>
+                {% if pattern.is_public %}
+                <span class="published-badge">Опубликовано</span>
+                {% endif %}
                 <form method="POST" action="{% url 'delete_pattern' pattern.pattern_id %}" 
                     id="deleteForm{{ pattern.pattern_id }}">
                     {% csrf_token %}
                 </form>
 
             </div>
+            {% empty %}
+            <p class="patterns-empty">У вас пока нет схем. Создайте первую.</p>
             {% endfor %}
 
+        </div>
+    </div>
+    <div class="tab-content" id="published-tab">
+        <div class="patterns-grid">
+            {% for pattern in published_patterns %}
+            <div class="pattern-card">
+                <a href="/pattern_view/?id={{ pattern.pattern_id }}" class="pattern-link">
+                    <div class="pattern-preview">
+                        <img src="{{ MEDIA_URL }}{{ pattern.image_preview }}" alt="Превью схемы" class="preview-img">
+                    </div>
+                    <div class="pattern-info">
+                        <h3 class="pattern-title">{{ pattern.title }}</h3>
+                    </div>
+                </a>
+                <div class="pattern-menu">
+                    <button class="menu-toggle">⋮</button>
+                    <div class="dropdown-menu">
+                        <a href="{% url 'edit_pattern' pattern.pattern_id %}" class="menu-item">Редактировать</a>
+                        <button type="submit" class="menu-item" form="unpublishForm{{ pattern.pattern_id }}">
+                            Снять с публикации
+                        </button>
+                        <button
+                            type="button"
+                            class="menu-item delete"
+                            data-form-id="deletePublishedForm{{ pattern.pattern_id }}">
+                            Удалить
+                        </button>
+                    </div>
+                </div>
+                <span class="published-badge">Опубликовано</span>
+
+                {% if pattern.categories.all %}
+                <div class="pattern-categories">
+                    {% for category in pattern.categories.all %}
+                    <span class="pattern-category-tag">{{ category.name }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form
+                    method="POST"
+                    action="{% url 'unpublish_pattern' pattern.pattern_id %}"
+                    id="unpublishForm{{ pattern.pattern_id }}">
+                    {% csrf_token %}
+                </form>
+                <form
+                    method="POST"
+                    action="{% url 'delete_pattern' pattern.pattern_id %}"
+                    id="deletePublishedForm{{ pattern.pattern_id }}">
+                    {% csrf_token %}
+                </form>
+            </div>
+            {% empty %}
+            <p class="patterns-empty">У вас пока нет опубликованных схем.</p>
+            {% endfor %}
         </div>
     </div>
 </div>

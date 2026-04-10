@@ -137,7 +137,57 @@
 .heart-icon {
     transition: color 0.3s ease;
 }
+.patterns-grid {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 2rem 2rem;
+}
+.pattern-info {
+    padding: 1rem;
+}
+.pattern-card {
+    padding: 1rem 2rem 1rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
 
+.pattern-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.pattern-preview {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.preview-img {
+    width: 100%;
+    object-fit: cover;
+    background: #f8f9fa;
+}
+.pattern-card:hover .pattern-menu {
+    opacity: 1;
+    visibility: visible;
+}
+.pattern-title {
+    margin-top: 1rem;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
 @media (max-width: 768px) {
     .page-content {
         padding: 1rem;
@@ -150,6 +200,7 @@
     .filters-container {
         flex-direction: column;
         align-items: center;
+        gap: 2rem;
     }
     
     .filter-group {
@@ -175,4 +226,12 @@
     .search-input {
         padding: 0.75rem 2.5rem 0.75rem 1rem;
     }
+    .patterns-grid {
+        box-shadow: none;
+        gap: 2rem;
+    }
+    .pattern-title {
+        font-size: 14px;
+    }
+    
 }

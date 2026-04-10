@@ -2,6 +2,29 @@
     max-width: 1200px;
     margin: 0 auto;
 }
+.tabs {
+    display: flex;
+    gap: 3rem;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.tab-button {
+    margin: 1rem;
+    padding: 1rem 1rem 0rem 1rem;
+    border: none;
+    background: none;
+    font-size: 22px;
+    color: #57755D;
+    cursor: pointer;
+    border-bottom: 1.5px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.tab-button.active {
+    border-bottom-color: #57755D;
+    font-weight: 400;
+}
 
 .tab-content {  
     display: none;
@@ -96,6 +119,9 @@
     overflow: hidden;
     position: relative;
 }
+.pattern-link {
+    display: block;
+}
 
 .pattern-card:hover {
     transform: translateY(-5px);
@@ -108,6 +134,8 @@
     overflow: hidden;
     display: flex;
     align-items: center;
+    background: white;
+    border-radius: 12px;
 }
 
 .preview-img {
@@ -151,6 +179,151 @@
     overflow-wrap: break-word;
     word-break: break-word;
 }
+.published-badge {
+    background: #27ae60;
+    z-index: 1;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    position: absolute;
+    top: 14px;
+    left: 14px;
+}
+
+.pattern-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0 1rem 0.75rem 1rem;
+}
+
+.pattern-category-tag {
+    background: rgba(255, 255, 255, 0.9);
+    color: #57755D;
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+    font-size: 12px;
+}
+
+.patterns-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 18px;
+    color: #57755D;
+    padding: 2rem 1rem;
+}
+
+.publish-modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    z-index: 1001;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 1rem;
+}
+
+.publish-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.publish-modal {
+    width: min(560px, 100%);
+    max-height: 90vh;
+    overflow: auto;
+    background: #f6f3ee;
+    border-radius: 14px;
+    padding: 1.5rem;
+}
+
+.publish-modal-title {
+    color: #57755D;
+    font-size: 22px;
+    margin-bottom: 0.5rem;
+}
+
+.publish-modal-subtitle {
+    color: #57755D;
+    font-size: 14px;
+    margin-bottom: 1rem;
+}
+
+.publish-categories {
+    display: grid;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.publish-category-option {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    border: 1px solid rgba(87, 117, 93, 0.25);
+    border-radius: 10px;
+    padding: 0.55rem 0.75rem;
+    cursor: pointer;
+    color: #57755D;
+    background: #ffffff;
+}
+
+.publish-category-option input {
+    accent-color: #57755D;
+}
+
+.publish-categories-empty {
+    color: #57755D;
+    font-size: 14px;
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.publish-modal-error {
+    color: #d64545;
+    font-size: 13px;
+    min-height: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.2s;
+}
+
+.publish-modal-error.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.publish-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.65rem;
+    margin-top: 0.65rem;
+}
+
+.publish-cancel-btn,
+.publish-submit-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 0.55rem 1rem;
+    cursor: pointer;
+    color: white;
+    font-size: 14px;
+}
+
+.publish-cancel-btn {
+    background: #86978b;
+}
+
+.publish-submit-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
 @media (max-width: 768px) {
     .page-content {
         padding: 1rem;
@@ -163,6 +336,7 @@
     .tab-button {
         text-align: center;
         border-bottom: 1px solid #e0e0e0;
+        font-size: 19px;
     }
 }
 @media (max-width: 480px) {
@@ -172,7 +346,13 @@
         box-shadow: none;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
+    .publish-modal {
+        padding: 1rem;
+    }
     .pattern-title {
         font-size: 14px;
+    }
+    .tab-button {
+        font-size: 17px;
     }
 }

@@ -19,9 +19,9 @@
         <nav class="sidebar-nav">
             <a href="/my_profile/" class="nav-link">Мой профиль</a>
             <a href="/my_patterns/" class="nav-link">Cхемы</a>
-            {% comment %} <a href="/favorites/" class="nav-link">Избранное</a> {% endcomment %}
+            <a href="{% url 'favorites' %}" class="nav-link">Избранное</a>
             <a href="/inventory/" class="nav-link">Инвентарь</a>
-            {% comment %} <a href="/community/" class="nav-link">Сообщество</a> {% endcomment %}
+            <a href="{% url 'community' %}" class="nav-link">Публикации</a>
             
             <form class="nav-link" style="padding: 10px 0px; background: #D65C6A; margin: 30px 0px 0px 0px;" method="POST" action="{% url 'logout' %}">
             {% csrf_token %}
@@ -43,8 +43,8 @@
         <div class="confirm-modal">
             <p id="confirmMessage">Вы уверены?</p>
             <div class="confirm-buttons">
-                <button id="confirmYes">Да</button>
-                <button id="confirmNo">Отмена</button>
+                <button type="button" id="confirmYes">Да</button>
+                <button type="button" id="confirmNo">Отмена</button>
             </div>
         </div>
     </div>
@@ -52,3 +52,4 @@
 
 </body>
 </html>
+

@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 import base64
 from PIL import Image, ImageDraw
 
-from ..models import Pattern, Palette, Thread, Canvas, Threadcalculation
+from ..models import Pattern, Palette, Thread, Canvas
 from ..services.pattern_generator import generate_pattern
 
 def generate_pattern_preview(cells, width, height):
@@ -36,14 +36,48 @@ def generate_pattern_api(request):
     if request.method != 'POST':
         return JsonResponse({"error": "Method not allowed"}, status=405)
     try:
-        data = json.loads(request.body)
+        data = json.loads(request.body or "{}")
+
+        image_base64 = data.get("image")
+        palette_name = data.get("palette")
+
+        try:
+            width = int(data.get("width"))
+            height = int(data.get("height"))
+            colors = int(data.get("colors"))
+        except (TypeError, ValueError):
+            return JsonResponse(
+                {"error": "Invalid payload: width, height and colors must be numbers"},
+                status=400
+            )
+
+        try:
+            count_per_cm = float(data.get("count_per_cm", 5.5))
+        except (TypeError, ValueError):
+            count_per_cm = 5.5
+
+        if count_per_cm <= 0:
+            count_per_cm = 5.5
+
+        if not image_base64 or not palette_name:
+            return JsonResponse(
+                {"error": "Invalid payload: image and palette are required"},
+                status=400
+            )
+
+        if width < 1 or height < 1 or colors < 1:
+            return JsonResponse(
+                {"error": "Invalid payload: width, height and colors must be >= 1"},
+                status=400
+            )
+
         result = generate_pattern(
-            image_base64=data["image"],
-            width=int(data["width"]),
-            height=int(data["height"]),
-            colors=int(data["colors"]),
-            palette_name=data["palette"],
-            count_per_cm=float(data.get("count_per_cm", 5.5))
+            image_base64=image_base64,
+            width=width,
+            height=height,
+            colors=colors,
+            palette_name=palette_name,
+            count_per_cm=count_per_cm
         )
         return JsonResponse(result)
     except Exception as e:
@@ -88,50 +122,41 @@ def save_pattern_api(request):
             format, imgstr = data["image"].split(';base64,')
             ext = format.split('/')[-1]
             filename = f"{uuid.uuid4()}.{ext}"
-            filepath = os.path.join(settings.MEDIA_ROOT, filename)
+            original_dir = os.path.join(settings.MEDIA_ROOT, 'original')
+            os.makedirs(original_dir, exist_ok=True)
+            filepath = os.path.join(original_dir, filename)
 
             with open(filepath, "wb") as f:
                 f.write(base64.b64decode(imgstr))
 
 
+        # Генерируем превью схемы
+        cells = data["cells"]
+        preview_image = generate_pattern_preview(cells, data["width"], data["height"])
+        preview_filename = f"preview_{uuid.uuid4()}.png"
+        preview_dir = os.path.join(settings.MEDIA_ROOT, 'preview')
+        os.makedirs(preview_dir, exist_ok=True)
+        preview_filepath = os.path.join(preview_dir, preview_filename)
+        preview_image.save(preview_filepath, 'PNG')
+
+        pattern_payload = {
+            "cells": data.get("cells", []),
+            "legend": data.get("legend", []),
+            "palette": data.get("palette", "DMC")
+        }
+
         pattern = Pattern.objects.create(
             user=user,
             canvas=canvas,
             title=data.get("title", "Без названия"),
-            image_original=filename,
-            image_preview=filename,  # временно
-            pattern_data=json.dumps({"cells": data["cells"]}),
+            image_original=f'original/{filename}' if filename else '',
+            image_preview=f'preview/{preview_filename}',
+            pattern_data=json.dumps(pattern_payload),
             size_width=data["width"],
             size_height=data["height"],
             created_date=timezone.now(),
             colors_count=len(data.get("legend", []))
         )
-
-        # Генерируем превью схемы
-        cells = data["cells"]
-        preview_image = generate_pattern_preview(cells, data["width"], data["height"])
-        preview_filename = f"preview_{uuid.uuid4()}.png"
-        preview_filepath = os.path.join(settings.MEDIA_ROOT, preview_filename)
-        preview_image.save(preview_filepath, 'PNG')
-        pattern.image_preview = preview_filename
-        pattern.save()
-
-        # сохраняем легенду с символами
-        for item in data.get("legend", []):
-            thread = Thread.objects.filter(
-                palette__name_palette__iexact=data.get("palette"),
-                code=item["code"]
-            ).first()
-            if not thread:
-                continue
-
-            Threadcalculation.objects.create(
-                pattern=pattern,
-                thread=thread,
-                crosses_count=item.get("count", 0),
-                length_cm=item.get("length_cm", 0),
-                symbol=item.get("symbol", "?")  # символ CharField теперь
-            )
 
         return JsonResponse({"id": pattern.pattern_id})
 
@@ -143,28 +168,35 @@ def save_pattern_api(request):
 def get_pattern_api(request, pattern_id):
     try:
         pattern = Pattern.objects.get(pattern_id=pattern_id)
-        pattern_data = json.loads(pattern.pattern_data)
+        try:
+            pattern_data = json.loads(pattern.pattern_data or "{}")
+        except (TypeError, json.JSONDecodeError):
+            pattern_data = {}
         cells = pattern_data.get("cells", [])
+        legend = pattern_data.get("legend", []) or []
+        palette_name = pattern_data.get("palette", "DMC")
 
-        legend = []
-        calculations = Threadcalculation.objects.filter(pattern=pattern)
-        for calc in calculations:
-            t = calc.thread
-            legend.append({
-                "code": t.code,
-                "name": t.name,
-                "r": t.rgb_r,
-                "g": t.rgb_g,
-                "b": t.rgb_b,
-                "symbol": calc.symbol,  # читаем символ напрямую
-                "count": calc.crosses_count,
-                "length_cm": float(calc.length_cm)
-            })
+        def with_palette_prefix(code):
+            if code is None:
+                return ""
+            code_text = str(code)
+            prefix = f"{palette_name}-"
+            return code_text if code_text.startswith(prefix) else f"{prefix}{code_text}"
+
+        legend_response = []
+        for item in legend:
+            if isinstance(item, dict):
+                row = dict(item)
+                row["code"] = with_palette_prefix(row.get("code"))
+                legend_response.append(row)
+            else:
+                legend_response.append(item)
 
         image_url = settings.MEDIA_URL + pattern.image_preview
         return JsonResponse({
             "cells": cells,
-            "legend": legend,
+            "legend": legend_response,
+            "palette": palette_name,
             "width": pattern.size_width,
             "height": pattern.size_height,
             "image": image_url
@@ -189,7 +221,9 @@ def update_pattern_api(request, pattern_id):
 
     pattern.title = data.get("title", pattern.title)
     pattern.pattern_data = json.dumps({
-        "cells": data.get("cells", [])
+        "cells": data.get("cells", []),
+        "legend": data.get("legend", []),
+        "palette": data.get("palette", "DMC")
     })
 
     # 🔹 Обеспечиваем, чтобы width и height > 0
@@ -208,36 +242,16 @@ def update_pattern_api(request, pattern_id):
     if cells:
         preview_image = generate_pattern_preview(cells, pattern.size_width, pattern.size_height)
         preview_filename = f"preview_{uuid.uuid4()}.png"
-        preview_filepath = os.path.join(settings.MEDIA_ROOT, preview_filename)
+        preview_dir = os.path.join(settings.MEDIA_ROOT, 'preview')
+        os.makedirs(preview_dir, exist_ok=True)
+        preview_filepath = os.path.join(preview_dir, preview_filename)
         preview_image.save(preview_filepath, 'PNG')
         # Удаляем старое превью, если оно не оригинал
         if pattern.image_preview and pattern.image_preview != pattern.image_original:
             old_preview_path = os.path.join(settings.MEDIA_ROOT, pattern.image_preview)
             if os.path.exists(old_preview_path):
                 os.remove(old_preview_path)
-        pattern.image_preview = preview_filename
+        pattern.image_preview = f'preview/{preview_filename}'
         pattern.save()
 
-    # Удаляем старые расчеты ниток и сохраняем новые
-    Threadcalculation.objects.filter(pattern=pattern).delete()
-    for item in data.get("legend", []):
-        thread = Thread.objects.filter(
-            palette__name_palette__iexact=data.get("palette"),
-            code=item["code"]
-        ).first()
-
-        if not thread:
-            continue
-
-        Threadcalculation.objects.create(
-            pattern=pattern,
-            thread=thread,
-            crosses_count=item.get("count", 0),
-            length_cm=item.get("length_cm", 0),
-            symbol=item.get("symbol", "?")
-        )
-
     return JsonResponse({"id": pattern.pattern_id})
-
-
-

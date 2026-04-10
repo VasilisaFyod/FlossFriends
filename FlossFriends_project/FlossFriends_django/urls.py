@@ -23,8 +23,11 @@ urlpatterns = [
     path('inventory/add/', page_views.add_thread, name='add_thread'),
     path('delete/<int:thread_id>/', page_views.delete_thread, name='delete_thread'),
     path('get_thread_color/', page_views.get_thread_color, name='get_thread_color'),
+    path('api/inventory-threads/', page_views.get_inventory_threads, name='get_inventory_threads'),
     path('patterns/edit/<int:pattern_id>/', page_views.edit_pattern, name='edit_pattern'),
     path('patterns/delete/<int:pattern_id>/', page_views.delete_pattern, name='delete_pattern'),
+    path('patterns/publish/', page_views.publish_pattern_from_my_patterns, name='publish_pattern_from_my_patterns'),
+    path('patterns/unpublish/<int:pattern_id>/', page_views.unpublish_pattern, name='unpublish_pattern'),
     # 🔹 AUTH
     path('register/', auth_views.register_view, name='register'),
     path('login/', auth_views.login_view, name='login'),

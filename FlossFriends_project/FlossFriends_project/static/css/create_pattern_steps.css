@@ -311,10 +311,125 @@
     transform: scale(1.1);
 }
 
+.change-btn.available {
+    background: rgba(91, 119, 101, 0.18);
+    box-shadow: 0 0 0 1px rgba(91, 119, 101, 0.5) inset;
+}
+
+.change-btn.available .change-icon {
+    filter: saturate(1.2) contrast(1.05);
+}
+
+.change-btn.available:hover {
+    background: rgba(91, 119, 101, 0.3);
+}
+
+.change-btn.disabled,
+.change-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.change-btn.disabled:hover,
+.change-btn:disabled:hover {
+    background: none;
+    transform: none;
+}
+
 .change-icon {
     width: 20px;
     height: 20px;
     transition: opacity 0.3s ease;
+}
+
+.thread-replacement-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+}
+
+.thread-replacement-modal-overlay.active {
+    display: flex;
+}
+
+.thread-replacement-modal {
+    width: min(560px, 92vw);
+    background: #f6f3ee;
+    border-radius: 14px;
+    padding: 1.4rem;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+}
+
+.thread-replacement-modal h3 {
+    margin: 0 0 1rem;
+    text-align: center;
+    font-size: 20px;
+}
+
+.thread-replacement-pair {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.thread-replacement-card {
+    background: #fff;
+    border: 1px solid #e6dfd3;
+    border-radius: 10px;
+    padding: 0.9rem;
+    text-align: center;
+    min-height: 130px;
+}
+
+.thread-replacement-label {
+    margin: 0 0 0.5rem;
+    font-size: 13px;
+    color: #6b6b6b;
+}
+
+.thread-replacement-color {
+    width: 34px;
+    height: 34px;
+    margin: 0 auto 0.6rem;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+}
+
+.thread-replacement-code {
+    margin: 0;
+    font-weight: 600;
+}
+
+.thread-replacement-name {
+    margin: 0.35rem 0 0;
+    font-size: 13px;
+    color: #777;
+}
+
+.thread-replacement-arrow {
+    font-size: 26px;
+    color: #57755d;
+    font-weight: 600;
+}
+
+.thread-replacement-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.thread-replacement-actions button {
+    border: none;
+    border-radius: 7px;
+    padding: 0.55rem 1rem;
+    background: #57755d;
+    color: #fff;
+    cursor: pointer;
 }
 /* Кнопки навигации */
 .navigation-buttons {
@@ -448,5 +563,12 @@
     }
     .pattern-container, .pattern-wrapper {
         height: 35vh;
+    }
+    .thread-replacement-pair {
+        grid-template-columns: 1fr;
+    }
+    .thread-replacement-arrow {
+        transform: rotate(90deg);
+        justify-self: center;
     }
 }

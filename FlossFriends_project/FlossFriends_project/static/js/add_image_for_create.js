@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (response.ok) {
                 sessionStorage.setItem("tempImage", data.image_url);
-                window.location.href = "/add_image_for_create/";
+                window.location.href = "/create_pattern_steps/";
             } else {
                 alert(data.error || "Ошибка загрузки изображения.");
             }

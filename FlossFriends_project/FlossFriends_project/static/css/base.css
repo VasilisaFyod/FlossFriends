@@ -18,7 +18,9 @@ button {
     font-weight: 100;
     background: rgba(87, 117, 93, 0.8);
 }
-
+a {
+   text-decoration: none; 
+}
 .create-section {
     display: flex;
     justify-content: center;

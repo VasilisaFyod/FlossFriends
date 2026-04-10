@@ -14,11 +14,18 @@ python -m venv .venv
 
 # Установить зависимости
 pip install -r requirements.txt
+
+#Перейти в папку приложения
+cd FlossFriends_project
 ```
+
 
 ### 2. Применить миграции Django
 ```bash
 python manage.py migrate
+
+# Если не применяются миграции
+python manage.py makemigrations
 ```
 
 ### 3. Загрузить справочные данные (нитки, палитры, холсты)
@@ -35,7 +42,7 @@ python manage.py loaddata threads
 python manage.py createsuperuser
 ```
 
-### 5. Запустить разработческий сервер
+### 5. Запустить сервер
 ```bash
 python manage.py runserver
 ```

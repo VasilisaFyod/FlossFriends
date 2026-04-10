@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const data = await res.json();
     const patternCells = data.cells || [];
     const legend = data.legend || [];
+    const palette = data.palette || 'DMC';
     const width = data.width;
     const height = data.height;
 
@@ -106,6 +107,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         legendTableBody.innerHTML = '';
 
+        const formatLegendCode = (code) => {
+            if (!code) return '';
+            const codeText = String(code);
+            return codeText.startsWith(`${palette}-`) ? codeText : `${palette}-${codeText}`;
+        };
+
         legend.forEach(item => {
             let lengthText = '';
             if (unit === "cm") lengthText = item.length_cm.toFixed(1) + " см";
@@ -122,7 +129,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         ${item.symbol}
                     </div>
                 </td>
-                <td>${item.code}</td>
+                <td>${formatLegendCode(item.code)}</td>
                 <td>${lengthText}</td>
             `;
             legendTableBody.appendChild(tr);

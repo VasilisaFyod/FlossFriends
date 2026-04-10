@@ -61,6 +61,12 @@ class PatternCreator {
         this.currentOffsetY = 0;
         this.controller = null;
         this.canvasList = [];
+        this.lastLegend = [];
+        this.inventoryThreads = [];
+
+        this.replacementModal = document.getElementById('threadReplacementModal');
+        this.bindReplacementModalEvents();
+        this.loadInventoryThreads();
 
         this.isEdit = existingPattern !== null;
 
@@ -92,8 +98,31 @@ class PatternCreator {
     async fetchCanvasData() {
         try {
             const res = await fetch('/api/get-canvas/');
-            if (!res.ok) throw new Error("Ошибка загрузки канвы");
+            if (!res.ok) throw new Error("Canvas list fetch failed");
             return await res.json();
+        } catch (e) {
+            console.error(e);
+            return [];
+        }
+    }
+
+    async loadInventoryThreads() {
+        try {
+            this.inventoryThreads = await this.fetchInventoryThreads();
+        } catch (e) {
+            console.error("Ошибка загрузки ниток из инвентаря", e);
+            this.inventoryThreads = [];
+        }
+
+        this.updateLegendTable(this.lastLegend || []);
+    }
+
+    async fetchInventoryThreads() {
+        try {
+            const res = await fetch('/api/inventory-threads/');
+            if (!res.ok) throw new Error("Inventory fetch failed");
+            const data = await res.json();
+            return Array.isArray(data.threads) ? data.threads : [];
         } catch (e) {
             console.error(e);
             return [];
@@ -105,8 +134,8 @@ class PatternCreator {
 
         const selectedName = this.getSelectedCanvasName();
         const canvas = this.canvasList.find(c => c.name === selectedName);
-
-        return canvas ? parseFloat(canvas.count_per_cm) : 5.5;
+        const parsed = canvas ? Number.parseFloat(canvas.count_per_cm) : Number.NaN;
+        return Number.isFinite(parsed) && parsed > 0 ? parsed : 5.5;
     }
 
 
@@ -125,12 +154,16 @@ class PatternCreator {
     getSelectedPalette() {
         const select = document.getElementById("paletteSelect");
         const selectedDiv = select?.querySelector(".select-selected");
-        if (!selectedDiv) return '';
+        if (!selectedDiv) return 'DMC';
         const items = select.querySelectorAll(".select-items div");
+        const selectedText = selectedDiv.textContent.trim();
+
         for (let item of items) {
-            if (item.textContent === selectedDiv.textContent) return item.dataset.value;
+            if (item.textContent.trim() === selectedText) return item.dataset.value;
         }
-        return '';
+
+        const firstOption = items[0];
+        return firstOption?.dataset?.value || 'DMC';
     }
     getSelectedLengthUnit() {
         const select = document.querySelector("#step3 .custom-select");
@@ -269,7 +302,7 @@ class PatternCreator {
         const palette = this.getSelectedPalette();
         try {
             const res = await fetch(`/api/get-palette-max/?palette=${encodeURIComponent(palette)}`);
-            if (!res.ok) throw new Error("Ошибка при получении палитры");
+            if (!res.ok) throw new Error("Palette fetch failed");
             const data = await res.json();
             return data.max_colors || 100;
         } catch (e) {
@@ -295,7 +328,10 @@ class PatternCreator {
         const maxColors = await this.fetchPaletteMaxColors();
         if (this.colorsSlider) {
             this.colorsSlider.max = maxColors;
-            if (parseInt(this.colorsSlider.value) > maxColors) this.colorsSlider.value = maxColors;
+            const currentValueRaw = Number.parseInt(this.colorsSlider.value, 10);
+            const currentValue = Number.isFinite(currentValueRaw) ? currentValueRaw : maxColors;
+            const nextValue = Math.min(Math.max(currentValue, 1), maxColors);
+            this.colorsSlider.value = String(nextValue);
             this.colorsValue.textContent = this.colorsSlider.value;
         }
     }
@@ -303,11 +339,23 @@ class PatternCreator {
     async updateColors() {
         if (!this.patternCanvas || !this.sourceImage || !this.colorsSlider) return;
 
-        const maxColors = parseInt(this.colorsSlider.max);
-        let colors = Math.min(parseInt(this.colorsSlider.value), maxColors);
+        const maxColorsRaw = Number.parseInt(this.colorsSlider.max, 10);
+        const maxColors = Number.isFinite(maxColorsRaw) && maxColorsRaw > 0 ? maxColorsRaw : 1;
+        const requestedColorsRaw = Number.parseInt(this.colorsSlider.value, 10);
+        const requestedColors = Number.isFinite(requestedColorsRaw) && requestedColorsRaw > 0
+            ? requestedColorsRaw
+            : maxColors;
+        const colors = Math.min(requestedColors, maxColors);
+        const widthRaw = Number.parseInt(this.patternData.width, 10);
+        const heightRaw = Number.parseInt(this.patternData.height, 10);
+        const width = Number.isFinite(widthRaw) && widthRaw > 0 ? widthRaw : 1;
+        const height = Number.isFinite(heightRaw) && heightRaw > 0 ? heightRaw : 1;
+        const countPerCmRaw = Number.parseFloat(this.getCanvasCountPerCm());
+        const countPerCm = Number.isFinite(countPerCmRaw) && countPerCmRaw > 0 ? countPerCmRaw : 5.5;
+        const palette = this.getSelectedPalette() || 'DMC';
 
-        this.colorsSlider.value = colors;
-        this.colorsValue.textContent = colors;
+        this.colorsSlider.value = String(colors);
+        this.colorsValue.textContent = String(colors);
 
         // Отменяем предыдущий запрос, если он есть
         if (this.controller) this.controller.abort();
@@ -331,17 +379,22 @@ class PatternCreator {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     image: imageBase64,
-                    width: this.patternData.width,
-                    height: this.patternData.height,
+                    width: width,
+                    height: height,
                     colors: colors,
-                    palette: this.getSelectedPalette(),
-                    count_per_cm: this.getCanvasCountPerCm()
+                    palette: palette,
+                    count_per_cm: countPerCm
                 }),
                 signal: this.controller.signal
             });
-
-            if (!res.ok) throw new Error("Ошибка сервера при генерации паттерна");
-
+            if (!res.ok) {
+                let message = "Server error while generating pattern";
+                try {
+                    const errorPayload = await res.json();
+                    if (errorPayload?.error) message = errorPayload.error;
+                } catch (_) {}
+                throw new Error(message);
+            }
             const data = await res.json();
             if (this.lastRequestId !== requestId) return;
 
@@ -391,6 +444,186 @@ class PatternCreator {
 
 
 // 🔹 Метод для обновления таблицы легенды
+    normalizeCode(code) {
+        if (code === null || code === undefined) return '';
+        return String(code).trim().toUpperCase();
+    }
+
+    parseRgb(source) {
+        if (!source) return null;
+        const r = Number(source.r);
+        const g = Number(source.g);
+        const b = Number(source.b);
+
+        if (![r, g, b].every(Number.isFinite)) return null;
+        if ([r, g, b].some(v => v < 0 || v > 255)) return null;
+
+        return { r, g, b };
+    }
+
+    getDistance(c1, c2) {
+        const color1 = this.parseRgb(c1);
+        const color2 = this.parseRgb(c2);
+        if (!color1 || !color2) return Number.POSITIVE_INFINITY;
+
+        return Math.sqrt(
+            (color1.r - color2.r) ** 2 +
+            (color1.g - color2.g) ** 2 +
+            (color1.b - color2.b) ** 2
+        );
+    }
+    getHueDistance(h1, h2) {
+        const diff = Math.abs(h1 - h2);
+        return Math.min(diff, 360 - diff);
+    }
+
+    getDominant(color) {
+        if (color.r > color.g && color.r > color.b) return "red";
+        if (color.g > color.r && color.g > color.b) return "green";
+        if (color.b > color.r && color.b > color.g) return "blue";
+        return "neutral";
+    }
+    getBrightness(color) {
+        return (color.r + color.g + color.b) / 3;
+    }
+    formatLegendCode(code, palettePrefix = this.getSelectedPalette() || 'DMC') {
+        if (!code) return '';
+        const codeText = String(code).trim();
+        if (codeText.includes('-')) return codeText;
+        return `${palettePrefix}-${codeText}`;
+    }
+    rgbToHsv({ r, g, b }) {
+        r /= 255;
+        g /= 255;
+        b /= 255;
+
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        const delta = max - min;
+
+        let h = 0;
+
+        if (delta !== 0) {
+            if (max === r) {
+                h = ((g - b) / delta) % 6;
+            } else if (max === g) {
+                h = (b - r) / delta + 2;
+            } else {
+                h = (r - g) / delta + 4;
+            }
+            h *= 60;
+            if (h < 0) h += 360;
+        }
+
+        const s = max === 0 ? 0 : delta / max;
+        const v = max;
+
+        return {
+            h,            // 0–360
+            s: s * 100,   // 0–100
+            v: v * 100    // 0–100
+        };
+    }
+
+    findClosestInventoryThread(legendItem, palettePrefix) {
+        if (!Array.isArray(this.inventoryThreads) || this.inventoryThreads.length === 0) return null;
+        if (!legendItem) return null;
+
+        const legendRgb = this.parseRgb(legendItem);
+        if (!legendRgb) return null;
+
+        const legendHsv = this.rgbToHsv(legendRgb);
+
+        const maxDistance = 150;
+        const maxHueDiff = 25;     // 🔥 главный фильтр
+        const maxSatDiff = 40;
+        const maxValDiff = 40;
+
+        let closest = null;
+        let minDistance = Number.POSITIVE_INFINITY;
+
+        this.inventoryThreads.forEach(thread => {
+            const threadRgb = this.parseRgb(thread);
+            if (!threadRgb) return;
+
+            const threadHsv = this.rgbToHsv(threadRgb);
+
+            const distance = this.getDistance(legendRgb, threadRgb);
+            const hueDiff = this.getHueDistance(legendHsv.h, threadHsv.h);
+            const satDiff = Math.abs(legendHsv.s - threadHsv.s);
+            const valDiff = Math.abs(legendHsv.v - threadHsv.v);
+
+            // 🔥 ГЛАВНЫЙ ФИЛЬТР
+            if (
+                hueDiff < maxHueDiff &&
+                satDiff < maxSatDiff &&
+                valDiff < maxValDiff &&
+                distance < maxDistance
+            ) {
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closest = thread;
+                }
+            }
+        });
+
+        return closest;
+    }
+
+
+
+    bindReplacementModalEvents() {
+        if (!this.replacementModal) return;
+        this.replacementModal.style.display = 'none';
+        this.replacementModal.setAttribute('aria-hidden', 'true');
+
+        const closeButtons = this.replacementModal.querySelectorAll('[data-close-replacement-modal]');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => this.closeReplacementModal());
+        });
+
+        this.replacementModal.addEventListener('click', (event) => {
+            if (event.target === this.replacementModal) {
+                this.closeReplacementModal();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && this.replacementModal.classList.contains('active')) {
+                this.closeReplacementModal();
+            }
+        });
+    }
+
+    setReplacementModalThreadData(prefix, thread) {
+        const colorEl = document.getElementById(`${prefix}ThreadColor`);
+        const codeEl = document.getElementById(`${prefix}ThreadCode`);
+        const nameEl = document.getElementById(`${prefix}ThreadName`);
+        if (!colorEl || !codeEl || !nameEl || !thread) return;
+
+        colorEl.style.backgroundColor = `rgb(${thread.r}, ${thread.g}, ${thread.b})`;
+        codeEl.textContent = thread.code;
+        nameEl.textContent = thread.name || '';
+    }
+
+    openReplacementModal(fromThread, toThread) {
+        if (!this.replacementModal) return;
+
+        this.setReplacementModalThreadData('from', fromThread);
+        this.setReplacementModalThreadData('to', toThread);
+
+        this.replacementModal.style.display = 'flex';
+        this.replacementModal.setAttribute('aria-hidden', 'false');
+        this.replacementModal.classList.add('active');
+    }
+
+    closeReplacementModal() {
+        if (!this.replacementModal) return;
+        this.replacementModal.classList.remove('active');
+        this.replacementModal.style.display = 'none';
+        this.replacementModal.setAttribute('aria-hidden', 'true');
+    }
+
     updateLegendTable(legend) {
         const tbody = document.getElementById('legendTableBody');
         if (!tbody) return;
@@ -398,29 +631,57 @@ class PatternCreator {
         tbody.innerHTML = '';
 
         const unit = this.getSelectedLengthUnit();
+        const palettePrefix = this.getSelectedPalette() || 'DMC';
 
         legend.forEach(item => {
             const tr = document.createElement('tr');
-
             const length = this.convertLength(item.length_cm, unit);
+            const formattedFromCode = this.formatLegendCode(item.code, palettePrefix);
+            const replacementThread = this.findClosestInventoryThread(item, palettePrefix);
+            const isReplacementAvailable = Boolean(replacementThread);
+
+            const replacementData = replacementThread
+                ? {
+                    code: replacementThread.full_code || this.formatLegendCode(replacementThread.code, replacementThread.palette),
+                    name: replacementThread.name || '',
+                    r: replacementThread.r,
+                    g: replacementThread.g,
+                    b: replacementThread.b
+                }
+                : null;
 
             tr.innerHTML = `
                 <td style="display:flex;justify-content:center;align-items:center;">
                     <div style="background: rgb(${item.r}, ${item.g}, ${item.b}); color: ${this.getContrastColor(item.r, item.g, item.b)};" class="symbol">
                         ${item.symbol}
                     </div>
-
                 </td>
-
-                <td>${item.code}</td>
+                <td>${formattedFromCode}</td>
                 <td>${length}</td>
-
                 <td>
-                    <button class="change-btn">
+                    <button type="button" class="change-btn ${isReplacementAvailable ? 'available' : 'disabled'}" ${isReplacementAvailable ? '' : 'disabled'}>
                         <img src="/static/images/change-color.png" class="change-icon">
                     </button>
                 </td>
             `;
+
+            const changeButton = tr.querySelector('.change-btn');
+            if (changeButton && replacementData) {
+                changeButton.addEventListener('click', () => {
+                    this.openReplacementModal(
+                        {
+                            code: formattedFromCode,
+                            name: item.name || '',
+                            r: item.r,
+                            g: item.g,
+                            b: item.b
+                        },
+                        replacementData
+                    );
+                });
+            } else if (changeButton) {
+                changeButton.title = 'В инвентаре нет подходящей нитки для замены';
+            }
 
             tbody.appendChild(tr);
         });
@@ -697,3 +958,4 @@ class PatternCreationSteps {
     }
 
 }
+

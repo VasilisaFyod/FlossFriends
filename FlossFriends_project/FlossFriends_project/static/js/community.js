@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 this.classList.add('active');
                 plusIcon.textContent = '+';
-                plusIcon.style.color = '#5B7765';
+                plusIcon.style.color = '#219653';
                 showNotification(`Схема "${patternTitle}" добавлена в избранное!`, 'success');
             }
         });
