@@ -21,86 +21,98 @@
 
     <div class="filters-section">
         <div class="filters-container">
+
             <div class="filter-group">
-                <label class="filter-label">Палитра</label>
-                <select class="filter-select">
-                    <option value="animals">DMC</option>
-                    <option value="nature">Гамма</option>
-                </select>
+                <label class="filter-label">Размер</label>
+                <div class="custom-select multi-select" id="sizeFilter">
+                    <div class="select-selected">Все размеры</div>
+                    <div class="select-items">
+                        <label class="checkbox-option">
+                            <input type="checkbox" value="small">
+                            <span>Маленькие (≤50)</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" value="medium">
+                            <span>Средние (50-150)</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" value="large">
+                            <span>Большие (150+)</span>
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <div class="filter-group">
-                <label class="filter-label">Сложность</label>
-                <select class="filter-select">
-                    <option value="">Легкая</option>
-                    <option value="easy">Средняя</option>
-                    <option value="medium">Сложная</option>
-                </select>
+                <label class="filter-label">Кол-во цветов</label>
+                <div class="custom-select multi-select" id="colorsFilter">
+                    <div class="select-selected">Все</div>
+                    <div class="select-items">
+                        <label class="checkbox-option">
+                            <input type="checkbox" value="few">
+                            <span>Мало (1-20)</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" value="medium">
+                            <span>Среднее (20-100)</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" value="many">
+                            <span>Много (100+)</span>
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <div class="filter-group">
                 <label class="filter-label">Категория</label>
-                <select class="filter-select">
-                    <option value="new">Цветы</option>
-                    <option value="popular">Животные</option>
-                </select>
+                <div class="custom-select multi-select" id="categoryFilter">
+                    <div class="select-selected">Все категории</div>
+                    <div class="select-items">
+                        {% for cat in categories %}
+                        <label class="checkbox-option">
+                            <input type="checkbox" value="{{ cat.name }}">
+                            <span>{{ cat.name }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="patterns-grid">
-        <div class="pattern-card">
-            <a href="/publish_pattern/" class="nav-link">
+    <div class="patterns-grid" id="patternsGrid">
+        {% for p in patterns %}
+        <div class="pattern-card" data-categories="{{ p.categories|join:',' }}" data-canvas="{{ p.canvas }}" data-size="{{ p.size_category }}" data-colors="{{ p.colors_category }}" data-title="{{ p.title }}">
+            <a href="/publish_pattern/?id={{ p.id }}&from=community" class="nav-link">
                 <div class="pattern-preview">
-                    <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
+                    {% if p.preview %}
+                        <img src="{{ MEDIA_URL }}{{ p.preview }}" alt="{{ p.title }}" class="preview-img">
+                    {% else %}
+                        <div class="no-preview">Нет превью</div>
+                    {% endif %}
                 </div>
             </a>
-        <div class="pattern-info">
-                    <h3 class="pattern-title">Название схемы</h3>
-                </div>
-            <div class="pattern-actions">
-                <button class="action-btn add-to-inventory" title="Добавить в инвентарь">
-                    <span class="plus-icon-favorite">+</span>
-                </button>
-                <button class="action-btn favorite-btn" title="Добавить в избранное">
-                    <span class="heart-icon">♡</span>
-                </button>
-            </div>
-        </div>
-        
-        <div class="pattern-card">
-            <div class="pattern-preview">
-                <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
-            </div>
             <div class="pattern-info">
-                    <h3 class="pattern-title">Название схемы</h3>
-                </div>
+                <h3 class="pattern-title">{{ p.title }}</h3>
+            </div>
             <div class="pattern-actions">
-                <button class="action-btn add-to-inventory" title="Добавить в инвентарь">
-                    <span class="plus-icon-favorite">+</span>
+                <button class="action-btn add-to-inventory {% if p.is_favorite %}active{% endif %}"
+                        data-pattern-id="{{ p.id }}" title="Добавить в избранное">
+                    <span class="plus-icon-favorite">{% if p.is_favorite %}✓{% else %}+{% endif %}</span>
                 </button>
-                <button class="action-btn favorite-btn" title="Добавить в избранное">
-                    <span class="heart-icon">♡</span>
+                <button class="action-btn favorite-btn {% if p.is_liked %}active{% endif %}"
+                        data-pattern-id="{{ p.id }}" title="Добавить в избранное">
+                    <span class="heart-icon">{% if p.is_liked %}♥{% else %}♡{% endif %}</span>
                 </button>
             </div>
         </div>
-
-        <div class="pattern-card">
-            <div class="pattern-preview">
-                <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
-            </div>
-            <div class="pattern-info">
-                    <h3 class="pattern-title">Название схемы</h3>
-                </div>
-            <div class="pattern-actions">
-                <button class="action-btn add-to-inventory" title="Добавить в инвентарь">
-                    <span class="plus-icon-favorite">+</span>
-                </button>
-                <button class="action-btn favorite-btn" title="Добавить в избранное">
-                    <span class="heart-icon">♡</span>
-                </button>
-            </div>
-        </div>
+        {% empty %}
+        <p class="no-patterns">Опубликованных схем пока нет</p>
+        {% endfor %}
+        {% if patterns %}
+        <p class="no-patterns" id="noPatterns" style="display: none;">Схемы не найдены</p>
+        {% endif %}
     </div>
 </div>
 

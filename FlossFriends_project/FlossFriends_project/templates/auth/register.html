@@ -17,7 +17,19 @@
                 <label>Email</label>
                 <input type="email" name="email" placeholder="Email">
                 <label>Пароль</label>
-                <input type="password" name="password" placeholder="Пароль">
+                <div class="password-field">
+                    <input id="register-password" type="password" name="password" placeholder="Пароль">
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        data-target="register-password"
+                        data-show-icon="{% static 'images/eye.svg' %}"
+                        data-hide-icon="{% static 'images/close-eye.svg' %}"
+                        aria-label="Показать пароль"
+                    >
+                        <img src="{% static 'images/eye.svg' %}" alt="" aria-hidden="true">
+                    </button>
+                </div>
                 
                 <button type="submit">Зарегистрироваться</button>
                 <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
@@ -27,5 +39,6 @@
                 {% endif %}
             </form>
         </div>
+        <script src="{% static 'js/password_toggle.js' %}"></script>
     </body>
 </html>

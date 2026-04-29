@@ -13,7 +13,7 @@
 
 .table-header {
     display: grid;
-    grid-template-columns: 0.5fr 2fr 0.5fr;
+    grid-template-columns: 0.5fr 2fr 1fr 0.5fr;
     background: #F6F3EE;
     color: #57755D;
     padding: 1rem 1rem;
@@ -25,15 +25,108 @@
 .color-column {
     justify-content: center;
     text-align: center;
+    display: flex;
+    gap: 1rem;
 }
 
 .code-column {
     text-align: center;
 }
 
-.actions-column {
-    justify-self: center;
+.quantity-column {
     text-align: center;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.quantity-value {
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.quantity-btn:hover {
+    background: #4a5f4d;
+}
+
+.quantity-display {
+    color: #57755D;
+    min-width: 60px;
+    text-align: center;
+}
+
+.quantity-input {
+    width: 72px;
+    padding: 0.35rem 0.45rem;
+    border-radius: 8px;
+    border: 1px solid rgba(87, 117, 93, 0.35);
+    background: #fff;
+    color: #57755D;
+    text-align: center;
+    font-size: 14px;
+}
+
+.quantity-input:focus {
+    outline: none;
+    border-color: rgba(87, 117, 93, 0.8);
+    box-shadow: 0 0 0 3px rgba(87, 117, 93, 0.12);
+}
+
+.quantity-unit-label {
+    color: #57755D;
+    font-size: 14px;
+}
+
+.unit-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+    justify-content: center;
+}
+
+.toggle-container {
+    display: flex;
+    border: 1px solid #57755D;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.unit-btn {
+    padding: 0.3rem 0.8rem;
+    border: none;
+    background: white;
+    color: #57755D;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.unit-btn.active {
+    background: #57755D;
+    color: white;
 }
 
 .table-body {
@@ -45,7 +138,7 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     display: grid;
     border-radius: 10px;
-    grid-template-columns: 0.5fr 2fr 0.5fr;
+    grid-template-columns: 0.5fr 2fr 1fr 0.5fr;
     padding: 0.5rem 1rem;
     border-bottom: none;
     align-items: center;
@@ -54,12 +147,6 @@
 
 .table-row:last-child {
     border-bottom: none;
-}
-
-.color-column {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
 }
 
 .color-swatch {
@@ -139,9 +226,15 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 .modal-overlay.active {
     display: flex;
+    opacity: 1;
+    visibility: visible;
 }
 
 .modal {

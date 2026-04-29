@@ -10,6 +10,7 @@
     border-radius: 16px;
     padding: 1.5rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 .pattern-container,
@@ -34,20 +35,35 @@
     right: 0;
     bottom: 0;
     pointer-events: none;
-    background: rgba(0, 0, 0, 0.03);
+    background-color: rgba(0, 0, 0, 0.03);
+    background-image: none;
 }
 .canvas-controls {
     position: absolute;
-    bottom: 10px;
+    bottom: 35px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     gap: 8px;
     background: rgba(255, 255, 255, 0.7);
     padding: 5px 10px;
     border-radius: 8px;
-    z-index: 10; 
+    z-index: 10;
+    z-index: 20; 
+    align-items: center;
 }
 
-.canvas-controls button:hover {
+.canvas-controls select {
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    background: #F6F3EE;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.canvas-controls select:hover {
     background: #d3d0cd;
 }
 
@@ -96,6 +112,32 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+}
+
+.pattern-info-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 0.5rem;
+}
+
+.pattern-info-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 15px;
+}
+
+.pattern-info-label {
+    white-space: nowrap;
+}
+
+.pattern-info-value {
+    font-weight: 600;
+    text-align: right;
 }
 
 .palette-label,
@@ -167,7 +209,7 @@
     border-radius:12px;
     box-shadow:0 10px 25px rgba(0,0,0,0.08);
 
-    display:none;
+    visibility:hidden;
     overflow:hidden;
 }
 
@@ -225,6 +267,26 @@
     height: 24px;
     border-radius: 4px;
     border: 2px solid #e0e0e0;
+}
+
+.inventory-status-badge {
+    display: inline-block;
+    padding: 0.3rem 0.55rem;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.inventory-status-badge.enough {
+    background: rgba(87, 117, 93, 0.14);
+    color: #57755D;
+}
+
+.inventory-status-badge.partial,
+.inventory-status-badge.none {
+    background: rgba(214, 92, 106, 0.12);
+    color: rgba(214, 92, 106, 0.95);
 }
 
 /* Кнопки навигации */

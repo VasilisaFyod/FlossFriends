@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Просмотр схемы - FlossFriends{% endblock %}
+{% block title %}{{ pattern.title }} - Просмотр схемы{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pattern_view.css' %}">
@@ -14,26 +14,49 @@
             <div class="pattern-section">
                 <div class="pattern-container">
                     <div class="pattern-wrapper">
-                        <img id="sourceImage" src="data:image/png;base64,{{ request.session.temp_image }}" style="display:none;">
                         <canvas id="patternCanvas"></canvas>
-                        <div class="canvas-controls">
-                            <button id="zoomInBtn">+</button>
-                            <button id="zoomOutBtn">−</button>
-                            <button id="resetViewBtn">⟲</button>
-                        </div>
+
                         <div class="pattern-overlay" id="patternOverlay"></div>
                     </div>
+                </div>
+                <div class="canvas-controls">
+                    <div class="custom-select" id="modeSelectWrapper">
+                        <div class="select-selected">Перетащить</div>
+                        <div class="select-items">
+                            <div data-value="drag">Перетащить</div>
+                            <div data-value="mark">Отметить</div>
+                            <div data-value="erase">Стереть</div>
+                        </div>
+                    </div>
+                    <button id="zoomInBtn">+</button>
+                    <button id="zoomOutBtn">−</button>
+                    <button id="resetViewBtn">⟲</button>
                 </div>
             </div>
             <div class="steps-section">
                 <div class="step-content" id="step3">
                     <div class="legend-card">
+                        <div class="pattern-info-block">
+                            <div class="pattern-info-row">
+                                <span class="pattern-info-label">Канва:</span>
+                                <div class="custom-select" id="canvasSelectWrapper">
+                                    <div class="select-selected">{{ pattern.canvas.name }}</div>
+                                    <div class="select-items">
+                                        {% for canvas_option in canvases %}
+                                            <div data-count="{{ canvas_option.count_per_cm }}">{{ canvas_option.name }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pattern-info-row">
+                                <span class="pattern-info-label">Размер ткани (см):</span>
+                                <span class="pattern-info-value" id="infoSizeCm"></span>
+                            </div>
+                        </div>
                         <div class="calculation-settings">
                             <label class="calculation-label">Расчет длины в:</label>
-
-                            <div class="custom-select">
+                            <div class="custom-select" id="unitsSelectWrapper">
                                 <div class="select-selected">см</div>
-
                                 <div class="select-items">
                                     <div data-value="meters">см</div>
                                     <div data-value="skeins">мотках</div>
@@ -48,6 +71,7 @@
                                         <th>Символ</th>
                                         <th>Код нитки</th>
                                         <th>Длина нитки</th>
+                                        <th>Инвентарь</th>
                                     </tr>
                                 </thead>
                                 <tbody id="legendTableBody"></tbody>
@@ -59,11 +83,12 @@
             </div>
         </div>
         <div class="navigation-buttons">
-            <button class="create-btn" id="prevBtn" style="background: rgba(214, 92, 106, 0.8)">Выйти</button>
+            <button class="create-btn" id="prevBtn" data-back-url="{{ back_url }}" style="background: rgba(214, 92, 106, 0.8)">{{ back_label }}</button>
         </div>
 
     </div>
 </div>
 
-<script src="{% static 'js/pattern_view.js' %}"></script>
+<script src="{% static 'js/pattern_view/pattern_view.js' %}"></script>
+<script src="{% static 'js/pattern_view/pattern_view_controls.js' %}"></script>
 {% endblock %}

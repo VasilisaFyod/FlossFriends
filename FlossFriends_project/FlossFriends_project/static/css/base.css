@@ -178,7 +178,16 @@ main {
     color: white;
     border: none;
 }
-body.modal-open-delete .page-content {
+button#confirmNo,
+.confirm-buttons button#confirmNo {
+    background: rgba(214, 92, 106, 0.8);
+    color: white;
+}
+
+body.modal-open .page-content,
+body.modal-open-delete .page-content,
+body.modal-open-publish .page-content,
+body.modal-open-replacement .page-content {
     filter: blur(2px);
 }
 @media (max-width: 768px) {

@@ -61,7 +61,7 @@
                                 </div>
                             </div>
                             <div>
-                                <input type="range" class="colors-slider" id="sizeSlider" min=1 max=100 step=1>
+                                <input type="range" class="colors-slider" id="sizeSlider" min=1 max=200 step=1>
                             </div>
                         </div>
                         <div class="palette-group">
@@ -189,6 +189,7 @@
             </div>
         </div>
         <div class="thread-replacement-actions">
+            <button type="button" id="confirmReplaceBtn">Заменить</button>
             <button type="button" data-close-replacement-modal>Закрыть</button>
         </div>
     </div>
@@ -210,5 +211,9 @@
     {% endif %};
 </script>
 
-<script src="{% static 'js/create_pattern_steps.js' %}"></script>
+<script src="{% static 'js/create_pattern_steps/create_pattern_steps.js' %}"></script>
+<script src="{% static 'js/create_pattern_steps/create_pattern_steps_render.js' %}"></script>
+<script src="{% static 'js/create_pattern_steps/create_pattern_steps_legend.js' %}"></script>
+<script src="{% static 'js/create_pattern_steps/create_pattern_steps_selects.js' %}"></script>
+<script src="{% static 'js/create_pattern_steps/create_pattern_steps_steps.js' %}"></script>
 {% endblock %}

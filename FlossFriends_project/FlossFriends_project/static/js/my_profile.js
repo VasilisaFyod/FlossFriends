@@ -1,4 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const passwordInput = document.getElementById("profile-password");
+    if (passwordInput) {
+        const expectedPassword = passwordInput.dataset.formPassword || "";
+        const keepServerValue = () => {
+            if (passwordInput.value !== expectedPassword) {
+                passwordInput.value = expectedPassword;
+            }
+        };
+
+        keepServerValue();
+        requestAnimationFrame(keepServerValue);
+        setTimeout(keepServerValue, 120);
+    }
 
     function openDeleteModal() {
         const modal = document.getElementById("confirmModal");

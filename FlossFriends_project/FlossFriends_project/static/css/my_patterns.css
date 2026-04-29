@@ -2,6 +2,7 @@
     max-width: 1200px;
     margin: 0 auto;
 }
+
 .tabs {
     display: flex;
     gap: 3rem;
@@ -316,7 +317,8 @@
 }
 
 .publish-cancel-btn {
-    background: #86978b;
+    background: rgba(214, 92, 106, 0.8);
+    color: white;
 }
 
 .publish-submit-btn:disabled {

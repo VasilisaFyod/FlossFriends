@@ -9,46 +9,39 @@
 
 {% block content %}
 <div class="page-content">
-    <div class="tabs-container">
-        <h3 class="title">Избранное</h3>
+    <div class="tabs">
+        <p class="tab-button active">Избранное</p>
     </div>
 
     <div class="tab-content active" id="my-patterns-tab">
         <div class="patterns-grid">
-            <div class="pattern-card">
+            {% for p in patterns %}
+            <div class="pattern-card" data-pattern-id="{{ p.id }}">
                 <div class="pattern-menu">
                     <button class="menu-toggle">⋮</button>
                     <div class="dropdown-menu">
-                        <button class="menu-item">Редактировать</button>
-                        <button class="menu-item delete">Удалить</button>
+                        <button class="menu-item delete remove-favorite-btn" data-pattern-id="{{ p.id }}">Удалить из избранного</button>
                     </div>
                 </div>
-                <div class="pattern-preview">
-                    <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
-                </div>
-                <div class="pattern-info">
-                    <h3 class="pattern-title">Название схемы</h3>
-                </div>
-            </div>
-
-            <div class="pattern-card">
-                <div class="pattern-menu">
-                    <button class="menu-toggle">⋮</button>
-                    <div class="dropdown-menu">
-                        <button class="menu-item">Редактировать</button>
-                        <button class="menu-item delete">Удалить</button>
+                <a href="/pattern_view/?id={{ p.id }}&from=favorites" class="nav-link">
+                    <div class="pattern-preview">
+                        {% if p.preview %}
+                            <img src="{{ MEDIA_URL }}{{ p.preview }}" alt="{{ p.title }}" class="preview-img">
+                        {% else %}
+                            <div class="no-preview">Нет превью</div>
+                        {% endif %}
                     </div>
-                </div>
-                <div class="pattern-preview">
-                    <img src="{% static 'images/pattern.jpg' %}" alt="Превью схемы" class="preview-img">
-                </div>
+                </a>
                 <div class="pattern-info">
-                    <h3 class="pattern-title">Название схемы</h3>
+                    <h3 class="pattern-title">{{ p.title }}</h3>
                 </div>
             </div>
+            {% empty %}
+            <p class="no-patterns">В избранном пока нет схем</p>
+            {% endfor %}
         </div>
     </div>
 </div>
 
-<script src="{% static 'js/my_patterns.js' %}"></script>
+<script src="{% static 'js/favorites.js' %}"></script>
 {% endblock %}

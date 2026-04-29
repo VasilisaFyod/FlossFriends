@@ -9,9 +9,7 @@
 
 {% block content %}
 <div class="page-content">
-
-    <div class="create-pattern-container">
-
+    <div class="create-pattern-container">  
         <div class="tabs">
             <button class="tab-button active" data-tab="generate">Генерация</button>
             <button class="tab-button" data-tab="upload">Загрузка</button>
@@ -26,32 +24,24 @@
                 </p>
 
                 <div class="prompt-input-container">
-                    <textarea 
-                        class="prompt-input" 
-                        id="promptInput"
-                        placeholder="Опишите изображение..."
-                        rows="3"
-                    ></textarea>
+                    <div class="prompt-input-row">
+                        <textarea 
+                            class="prompt-input" 
+                            id="promptInput"
+                            placeholder="Опишите изображение..."
+                            rows="3"
+                        ></textarea>
 
-                    <button class="create-btn" id="generateAiBtn">
-                        Сгенерировать
-                    </button>
+                        <button type="button" class="create-btn" id="generateAiBtn">
+                            Сгенерировать
+                        </button>
+                    </div>
                 </div>
 
                 <div class="ai-result-container" id="aiResultContainer">
 
                     <div class="ai-generated-image">
                         <img src="{% static 'images/pattern.jpg' %}" id="aiGeneratedImage">
-
-                        <div class="image-actions">
-                            <button class="create-btn" id="useAiImageBtn">
-                                Использовать
-                            </button>
-
-                            <button class="create-btn" id="regenerateBtn">
-                                Сгенерировать заново
-                            </button>
-                        </div>
                     </div>
 
                 </div>
@@ -86,7 +76,9 @@
         </div>
 
         <div class="action-buttons">
-            <button class="create-btn" id="createPatternBtn">Создать схему</button>
+            <button type="button" class="create-btn back-btn" id="backBtn">Назад</button>
+            <button class="create-btn" id="createPatternBtn" disabled>Создать схему</button>
+            <p class="create-hint" id="createPatternHint">Сначала загрузите или сгенерируйте изображение, затем нажмите «Создать схему».</p>
         </div>
 
     </div>

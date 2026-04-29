@@ -237,7 +237,7 @@
     border-radius:12px;
     box-shadow:0 10px 25px rgba(0,0,0,0.08);
 
-    display:none;
+    visibility:hidden;
     overflow:hidden;
 }
 
@@ -336,6 +336,18 @@
     transform: none;
 }
 
+.in-inventory-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: #57755d;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.in-inventory-badge.insufficient {
+    color: rgba(214, 92, 106, 0.95);
+}
+
 .change-icon {
     width: 20px;
     height: 20px;
@@ -350,10 +362,15 @@
     align-items: center;
     justify-content: center;
     z-index: 1200;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .thread-replacement-modal-overlay.active {
     display: flex;
+    opacity: 1;
+    visibility: visible;
 }
 
 .thread-replacement-modal {
@@ -420,6 +437,7 @@
 .thread-replacement-actions {
     display: flex;
     justify-content: center;
+    gap: 0.75rem;
     margin-top: 1rem;
 }
 
@@ -430,6 +448,11 @@
     background: #57755d;
     color: #fff;
     cursor: pointer;
+}
+
+.thread-replacement-actions button[data-close-replacement-modal] {
+    background: rgba(214, 92, 106, 0.8);
+    color: white;
 }
 /* Кнопки навигации */
 .navigation-buttons {
@@ -448,10 +471,15 @@
     display: none;
     align-items: center;
     justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .modal-overlay.active {
     display: flex;
+    opacity: 1;
+    visibility: visible;
 }
 
 .modal {
@@ -484,6 +512,11 @@
     border: none;
     border-radius: 6px;
     cursor: pointer;
+}
+
+#cancelBtn {
+    background: rgba(214, 92, 106, 0.8);
+    color: white;
 }
 .error-box {
     position: fixed;

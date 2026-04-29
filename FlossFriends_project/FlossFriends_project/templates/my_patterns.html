@@ -60,7 +60,7 @@
        <div class="patterns-grid">
             {% for pattern in patterns %}
             <div class="pattern-card">
-                <a href="/pattern_view/?id={{ pattern.pattern_id }}" class="pattern-link">
+                <a href="/pattern_view/?id={{ pattern.pattern_id }}&from=my_patterns&tab=my-patterns" class="pattern-link">
                     <div class="pattern-preview">
                         <img src="{{ MEDIA_URL }}{{ pattern.image_preview }}" class="preview-img">
                     </div>
@@ -109,7 +109,7 @@
         <div class="patterns-grid">
             {% for pattern in published_patterns %}
             <div class="pattern-card">
-                <a href="/pattern_view/?id={{ pattern.pattern_id }}" class="pattern-link">
+                <a href="/publish_pattern/?id={{ pattern.pattern_id }}&from=my_patterns&tab=published" class="pattern-link">
                     <div class="pattern-preview">
                         <img src="{{ MEDIA_URL }}{{ pattern.image_preview }}" alt="Превью схемы" class="preview-img">
                     </div>

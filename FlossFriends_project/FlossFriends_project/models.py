@@ -6,7 +6,7 @@ import uuid
 
 class Palette(models.Model):
     palette_id = models.AutoField(primary_key=True)
-    name_palette = models.CharField(unique=True, max_length=50, db_collation='Cyrillic_General_CI_AS')
+    name = models.CharField(unique=True, max_length=50, db_collation='Cyrillic_General_CI_AS')
 
     class Meta:
         db_table = 'Palette'
@@ -40,10 +40,9 @@ class Pattern(models.Model):
     pattern_data = models.TextField()
     size_width = models.IntegerField()
     size_height = models.IntegerField()
-    created_date = models.DateTimeField()
-    updated_date = models.DateTimeField(null=True, blank=True)
-    colors_count = models.IntegerField()
-    is_public = models.BooleanField(null=True, blank=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField(null=True, blank=True)
+    is_public = models.BooleanField(default=False)
     categories = models.ManyToManyField(
         Category,
         through='PatternCategory',
@@ -78,7 +77,7 @@ class Pattern(models.Model):
         db_table = 'Pattern'
 
 class PatternCategory(models.Model):
-    patterncategory_id = models.AutoField(primary_key=True)
+    pattern_category_id = models.AutoField(primary_key=True)
     pattern = models.ForeignKey(Pattern, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
@@ -95,7 +94,7 @@ class Favorite(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
-    created_date = models.DateTimeField()
+    created_at = models.DateTimeField()
 
     class Meta:
         db_table = 'Favorite'
@@ -111,7 +110,7 @@ class Like(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
-    created_date = models.DateTimeField()
+    created_at = models.DateTimeField()
 
     class Meta:
         db_table = 'Like'
@@ -132,14 +131,14 @@ class Thread(models.Model):
         unique_together = (('palette', 'code'),)
 
 
-class Threadinventory(models.Model):
+class ThreadInventory(models.Model):
     thread_inventory_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
-    skeins_count = models.IntegerField()
+    length_cm = models.IntegerField()
 
     class Meta:
         db_table = 'ThreadInventory'
@@ -149,7 +148,8 @@ class Threadinventory(models.Model):
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     email_verified = models.BooleanField(default=False)
-    verification_token = models.UUIDField(default=uuid.uuid4, editable=False)
+    verification_token = models.UUIDField(default=uuid.uuid4, editable=False, null=True, blank=True)
+    token_created_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.username

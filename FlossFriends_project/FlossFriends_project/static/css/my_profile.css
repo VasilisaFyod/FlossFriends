@@ -110,6 +110,52 @@
     border: none;
     background: none;
 }
+
+.password-field {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 0.5rem;
+    gap: 10rem;
+    width: 100%;
+}
+
+.password-field input {
+    flex: 1;
+    padding-right: 44px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: #57755d;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    line-height: 1;
+}
+
+.password-toggle img {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
+.password-toggle:hover {
+    color: #2e7d32;
+    background: transparent;
+}
 .profile-actions {
     display: flex;
     gap: 8rem;

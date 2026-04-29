@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка - FlossFriends</title>
+    {% load static %}
+    <link rel="icon" type="image/png" href="{% static 'images/ai.png' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="error-message">
+            <h1>Ошибка</h1>
+            <p>{{ error }}</p>
+            <a href="/">Вернуться на главную</a>
+        </div>
+    </div>
+</body>
+</html>

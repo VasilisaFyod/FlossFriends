@@ -1,11 +1,13 @@
 from django.contrib.auth import authenticate
 import uuid
 import re
+import threading
 from django.core.mail import send_mail
 from django.conf import settings
 from ..models import CustomUser
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 def register_user(request):
@@ -42,6 +44,7 @@ def register_user(request):
     user = CustomUser(username=username, email=email)
     user.set_password(password)
     user.verification_token = uuid.uuid4()
+    user.token_created_at = timezone.now()
 
     # Генерация ссылки для подтверждения email
     link = f"http://127.0.0.1:8000/verify-email/{user.verification_token}/"
@@ -49,13 +52,19 @@ def register_user(request):
     try:
         user.save()
 
-        # Отправка письма
-        send_mail(
-            "Подтверждение регистрации",
-            f"Перейдите по ссылке для подтверждения: {link}",
-            settings.EMAIL_HOST_USER,
-            [user.email],
-        )
+        # Отправка письма в фоновом потоке
+        def send_verification_email():
+            try:
+                send_mail(
+                    "Подтверждение регистрации",
+                    f"Перейдите по ссылке для подтверждения: {link}",
+                    settings.EMAIL_HOST_USER,
+                    [user.email],
+                )
+            except Exception as e:
+                print(f"[EMAIL ERROR] {type(e).__name__}: {e}")
+
+        threading.Thread(target=send_verification_email, daemon=True).start()
 
     except Exception as e:
         user.delete()

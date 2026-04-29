@@ -10,6 +10,8 @@
 {% block content %}
 <div class="page-content">
 
+    {% csrf_token %}
+
     <div class="inventory-content">
         <div class="create-section">
             <button class="create-btn" id="add-thread">
@@ -21,6 +23,15 @@
             <div class="table-header">
                 <div class="column color-column">Цвет</div>
                 <div class="column code-column">Код</div>
+                <div class="column quantity-column">
+                    Количество
+                    <div class="unit-toggle">
+                        <div class="toggle-container">
+                            <button id="unit-skeins" class="unit-btn">Мотки</button>
+                            <button id="unit-cm" class="unit-btn active">См</button>
+                        </div>
+                    </div>
+                </div>
                 <div class="column actions-column"></div>
             </div>
 
@@ -32,7 +43,27 @@
                     </div>
 
                     <div class="column code-column">
-                        <span class="thread-code">{{ item.thread.palette.name_palette }} - {{ item.thread.code }}</span>
+                        <span class="thread-code">{{ item.thread.palette.name }} - {{ item.thread.code }}</span>
+                    </div>
+
+                    <div class="column quantity-column">
+                        <div class="quantity-controls">
+                            <button type="button" class="quantity-btn minus-btn" data-thread-id="{{ item.thread.thread_id }}">-</button>
+                            <div class="quantity-value" data-thread-id="{{ item.thread.thread_id }}">
+                                <input
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    class="quantity-input"
+                                    data-thread-id="{{ item.thread.thread_id }}"
+                                    data-length-cm="{{ item.length_cm }}"
+                                    value="{{ item.length_cm }}"
+                                >
+                                <span class="quantity-unit-label">см</span>
+                                <span class="quantity-display" data-length-cm="{{ item.length_cm }}"></span>
+                            </div>
+                            <button type="button" class="quantity-btn plus-btn" data-thread-id="{{ item.thread.thread_id }}">+</button>
+                        </div>
                     </div>
 
                     <div class="column actions-column">

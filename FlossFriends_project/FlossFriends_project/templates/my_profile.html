@@ -17,12 +17,12 @@
                 </div>
             </div>
             
-            <form method="POST" action="{% url 'my_profile' %}" class="user-info-card">
+            <form method="POST" action="{% url 'my_profile' %}" class="user-info-card" autocomplete="on">
                 {% csrf_token %}
                 
                 <span class="info-label">Имя пользователя</span>
                 <div class="info-item">
-                    <input type="text" name="username" value="{{ user.username }}" class="info-value">
+                    <input type="text" name="username" value="{{ user.username }}" class="info-value" autocomplete="username">
                 </div>
 
                 <span class="info-label">Электронная почта</span>
@@ -31,16 +31,26 @@
                 </div>
 
                 <span class="info-label">Пароль</span>
-                <div class="info-item">
-                    <input type="password" name="password" placeholder="Введите новый пароль" class="password-value">
+                <div class="password-field">
+                    <input id="profile-password" type="password" name="password" value="{{ form_password|default:'' }}" data-form-password="{{ form_password|default:'' }}" placeholder="Введите новый пароль" class="password-value" autocomplete="new-password">
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        data-target="profile-password"
+                        data-show-icon="{% static 'images/close-eye.svg' %}"
+                        data-hide-icon="{% static 'images/eye.svg' %}"
+                        aria-label="Показать пароль"
+                    >
+                        <img src="{% static 'images/close-eye.svg' %}" alt="" aria-hidden="true">
+                    </button>
                 </div>
 
                 <button type="submit" class="btn btn-save">Сохранить изменения</button>
 
                 {% if error %}
                     <p style="color:red">{{ error }}</p>
-                {% elif success %}
-                    <p style="color:green">{{ success }}</p>
+                {% elif message %}
+                    <p style="color:green">{{ message }}</p>
                 {% endif %}
             </form>
         </div>
@@ -61,4 +71,5 @@
     </div>
 </div>
 <script src="{% static 'js/my_profile.js' %}"></script>
+<script src="{% static 'js/password_toggle.js' %}"></script>
 {% endblock %}

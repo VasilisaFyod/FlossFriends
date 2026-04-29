@@ -1,79 +1,76 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const likeBtn = document.querySelector('.like-btn');
-    const likeCount = document.querySelector('.action-count');
-    
-    likeBtn.addEventListener('click', function() {
-        let count = parseInt(likeCount.textContent);
-        
-        if (this.classList.contains('active')) {
-            this.classList.remove('active');
-            count--;
-            this.style.background = 'rgba(231, 76, 60, 0.1)';
-            showNotification('Лайк удален', 'info');
-        } else {
-            this.classList.add('active');
-            count++;
-            this.style.background = 'rgba(231, 76, 60, 0.2)';
-            showNotification('Схема понравилась!', 'success');
-        }
-        
-        likeCount.textContent = count;
-    });
-    
-    const favoriteBtn = document.querySelector('.favorite-btn');
-    
-    favoriteBtn.addEventListener('click', function() {
-        if (this.classList.contains('active')) {
-            this.classList.remove('active');
-            this.innerHTML = '<span class="plus-icon">+</span><span class="action-text">Добавить в избранное</span>';
-            this.style.background = 'rgba(39, 174, 96, 0.1)';
-            showNotification('Удалено из избранного', 'info');
-        } else {
-            this.classList.add('active');
-            this.innerHTML = '<span class="check-icon">✓</span><span class="action-text">В избранном</span>';
-            this.style.background = 'rgba(39, 174, 96, 0.2)';
-            showNotification('Добавлено в избранное!', 'success');
-        }
-    });
-    
-    const commentForm = document.querySelector('.comment-form');
-    const commentInput = document.querySelector('.comment-input');
-    const commentsList = document.querySelector('.comments-list');
-    const commentsCount = document.querySelector('.comments-count');
-    
-    commentForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const commentText = commentInput.value.trim();
-        
-        if (commentText) {
-            addNewComment(commentText);
-            commentInput.value = '';
-            updateCommentsCount(1);
-            showNotification('Комментарий добавлен', 'success');
-        }
-    });
-    
-    function addNewComment(text) {
-        const newComment = document.createElement('div');
-        newComment.className = 'comment-item';
-        newComment.innerHTML = `
-            <div class="comment-header">
-                <span class="comment-author">Вы</span>
-                <span class="comment-date">только что</span>
-            </div>
-            <p class="comment-text">${text}</p>
-        `;
-        
-        commentsList.insertBefore(newComment, commentsList.firstChild);
+document.addEventListener('DOMContentLoaded', function () {
+    const page = document.querySelector('.page-content');
+    const likeBtn = document.querySelector('button.like-btn');
+    const favoriteBtn = document.querySelector('button.favorite-btn[aria-label="Добавить в избранное"]');
+
+    if (!page || !likeBtn) {
+        return;
     }
-    
-    function updateCommentsCount(increment) {
-        const currentCount = parseInt(commentsCount.textContent.replace(/[()]/g, ''));
-        commentsCount.textContent = `(${currentCount + increment})`;
+
+    const patternId = page.dataset.patternId;
+
+    function getCsrfToken() {
+        const match = document.cookie.match(/csrftoken=([^;]+)/);
+        return match ? match[1] : '';
     }
-    
-    function showNotification(message, type) {
-        console.log(`${type}: ${message}`);
+
+    async function postToggle(url) {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCsrfToken(),
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        return response.json();
+    }
+
+    likeBtn.addEventListener('click', async function () {
+        const icon = this.querySelector('.heart-icon');
+        const count = this.querySelector('.action-count');
+
+        try {
+            const data = await postToggle(`/api/toggle-like/${patternId}/`);
+            const currentCount = parseInt(count.textContent, 10) || 0;
+
+            if (data.status === 'added') {
+                this.classList.add('active');
+                icon.textContent = '♥';
+                count.textContent = currentCount + 1;
+            } else {
+                this.classList.remove('active');
+                icon.textContent = '♡';
+                count.textContent = Math.max(0, currentCount - 1);
+            }
+        } catch (error) {
+            console.error('toggle-like failed:', error);
+        }
+    });
+
+    if (favoriteBtn) {
+        favoriteBtn.addEventListener('click', async function () {
+            const icon = this.querySelector('.plus-icon');
+            const text = this.querySelector('.action-text');
+
+            try {
+                const data = await postToggle(`/api/toggle-favorite/${patternId}/`);
+
+                if (data.status === 'added') {
+                    this.classList.add('active');
+                    icon.textContent = '✓';
+                    text.textContent = 'В избранном';
+                } else {
+                    this.classList.remove('active');
+                    icon.textContent = '+';
+                    text.textContent = 'Добавить в избранное';
+                }
+            } catch (error) {
+                console.error('toggle-favorite failed:', error);
+            }
+        });
     }
 });
