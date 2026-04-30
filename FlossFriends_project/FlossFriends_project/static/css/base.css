@@ -186,7 +186,6 @@ button#confirmNo,
 
 body.modal-open .page-content,
 body.modal-open-delete .page-content,
-body.modal-open-publish .page-content,
 body.modal-open-replacement .page-content {
     filter: blur(2px);
 }
