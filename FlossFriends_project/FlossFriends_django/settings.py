@@ -71,7 +71,7 @@ DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', 'mssql'),
         'NAME': os.getenv('DB_NAME', 'Floss_friends'),
-        'HOST': os.getenv('DB_HOST', 'DESKTOP-67VCCKN\\SQLEXPRESS'),
+        'HOST': os.getenv('DB_HOST', 'localhost\\SQLEXPRESS'),
         'USER': os.getenv('DB_USER', ''),
         'PASSWORD': os.getenv('DB_PASSWORD', ''),
         'OPTIONS': {
