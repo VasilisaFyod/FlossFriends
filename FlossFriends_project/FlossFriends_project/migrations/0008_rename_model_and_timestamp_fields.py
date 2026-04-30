@@ -24,11 +24,6 @@ class Migration(migrations.Migration):
             new_name="created_at",
         ),
         migrations.RenameField(
-            model_name="like",
-            old_name="created_date",
-            new_name="created_at",
-        ),
-        migrations.RenameField(
             model_name="patterncategory",
             old_name="patterncategory_id",
             new_name="pattern_category_id",
