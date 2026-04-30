@@ -62,8 +62,9 @@ python manage.py migrate
 ```
 
 ### 7. Загрузка стартовых данных
-Если нужны палитры, канва и нитки:
+Если нужны категории, палитры, канва и нитки:
 ```bash
+python manage.py loaddata FlossFriends_project/fixtures/categories.json
 python manage.py loaddata FlossFriends_project/fixtures/palettes.json
 python manage.py loaddata FlossFriends_project/fixtures/canvas.json
 python manage.py loaddata FlossFriends_project/fixtures/threads.json

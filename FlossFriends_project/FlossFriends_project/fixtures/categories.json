@@ -1,0 +1,72 @@
+[
+  {
+    "model": "FlossFriends_project.category",
+    "pk": 1,
+    "fields": {
+      "name": "Животные"
+    }
+  },
+  {
+    "model": "FlossFriends_project.category",
+    "pk": 2,
+    "fields": {
+      "name": "Цветы"
+    }
+  },
+  {
+    "model": "FlossFriends_project.category",
+    "pk": 3,
+    "fields": {
+      "name": "Пейзажи"
+    }
+  },
+  {
+    "model": "FlossFriends_project.category",
+    "pk": 4,
+    "fields": {
+      "name": "Портреты"
+    }
+  },
+  {
+    "model": "FlossFriends_project.category",
+    "pk": 5,
+    "fields": {
+      "name": "Праздники"
+    }
+  },
+  {
+    "model": "FlossFriends_project.category",
+    "pk": 6,
+    "fields": {
+      "name": "Детское"
+    }
+  },
+  {
+    "model": "FlossFriends_project.category",
+    "pk": 7,
+    "fields": {
+      "name": "Абстракция"
+    }
+  },
+  {
+    "model": "FlossFriends_project.category",
+    "pk": 8,
+    "fields": {
+      "name": "Миниатюры"
+    }
+  },
+  {
+    "model": "FlossFriends_project.category",
+    "pk": 9,
+    "fields": {
+      "name": "Орнаменты"
+    }
+  },
+  {
+    "model": "FlossFriends_project.category",
+    "pk": 10,
+    "fields": {
+      "name": "Другое"
+    }
+  }
+]
