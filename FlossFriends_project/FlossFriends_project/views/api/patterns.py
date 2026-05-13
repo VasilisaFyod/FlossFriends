@@ -34,7 +34,6 @@ def _normalize_pattern_thread_code(code, palette_name):
 
 
 def _sync_inventory_for_pattern(user, old_payload, new_payload):
-    # Инвентарь не списываем автоматически.
     return None
 
 

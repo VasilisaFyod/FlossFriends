@@ -65,19 +65,15 @@ def decode_image(image_base64):
 def rgb_to_lab_array(rgb_array):
     """Конвертирует массив Nx3 (RGB 0-255) в CIE Lab для перцептуально точного сравнения цветов."""
     rgb = np.asarray(rgb_array, dtype=np.float64) / 255.0
-    # sRGB -> линейный RGB (убираем гамму)
     linear = np.where(rgb > 0.04045, ((rgb + 0.055) / 1.055) ** 2.4, rgb / 12.92)
-    # Линейный RGB -> XYZ (при освещении D65)
     M = np.array([
         [0.4124564, 0.3575761, 0.1804375],
         [0.2126729, 0.7151522, 0.0721750],
         [0.0193339, 0.1191920, 0.9503041]
     ])
     xyz = linear @ M.T
-    # Нормализация по белой точке D65
     xyz[:, 0] /= 0.95047
     xyz[:, 2] /= 1.08883
-    # XYZ -> Lab
     def f(t):
         return np.where(t > 0.008856, np.cbrt(t), (903.3 * t + 16.0) / 116.0)
     fx, fy, fz = f(xyz[:, 0]), f(xyz[:, 1]), f(xyz[:, 2])

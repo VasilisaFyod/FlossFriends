@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const SKEIN_LENGTH_CM = 800;
-    let currentUnit = 'cm'; // 'skeins' or 'cm'
+    let currentUnit = 'cm';
     let isRefreshingFromServer = false;
 
     function formatSkeins(lengthCm) {
@@ -124,8 +124,6 @@ function toggleActive(activeId) {
             activeButton.classList.add('active');
         }
     }
-
-    // Обработчики для переключателя единиц
     const skeinsButton = document.getElementById('unit-skeins');
     const cmButton = document.getElementById('unit-cm');
 
@@ -175,11 +173,9 @@ function toggleActive(activeId) {
         message.innerText = "Вы уверены, что хотите удалить нитку?";
     }
     let currentFormId = null;
-
-    // навешиваем на все кнопки удаления
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            currentFormId = this.dataset.formId; // получаем id формы
+            currentFormId = this.dataset.formId;
             if (confirmModal) {
                 confirmModal.classList.add("active");
             }
@@ -215,8 +211,6 @@ function toggleActive(activeId) {
     if (!modal || !openBtn || !cancelBtn || !input || !preview || !form) {
         return;
     }
-
-    // <p> для отображения ошибки
     let errorBlock = document.getElementById("modalError");
     if (!errorBlock) {
         errorBlock = document.createElement("p");
@@ -225,9 +219,7 @@ function toggleActive(activeId) {
         form.insertBefore(errorBlock, form.querySelector(".modal-buttons"));
     }
 
-    let valid = false; // флаг корректности кода
-
-    // открыть модалку
+    let valid = false;
     openBtn.addEventListener("click", () => {
         modal.classList.add("active");
         document.body.classList.add("modal-open");
@@ -237,8 +229,6 @@ function toggleActive(activeId) {
         input.value = "";
         valid = false;
     });
-
-    // закрыть модалку
     cancelBtn.addEventListener("click", () => {
         modal.classList.remove("active");
         document.body.classList.remove("modal-open");
@@ -260,8 +250,6 @@ function toggleActive(activeId) {
             valid = false;
         }
     });
-
-    // проверка кода нитки и окрашивание кружочка
     input.addEventListener("input", function () {
         const code = input.value.trim();
 
@@ -297,16 +285,12 @@ function toggleActive(activeId) {
             });
 
     });
-
-    // отменяем отправку формы, если код невалидный
     form.addEventListener("submit", function (e) {
         if (!valid) {
             e.preventDefault();
             errorBlock.textContent = "Введите корректный код нитки!";
         }
     });
-
-    // обработчики для изменения количества
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('quantity-btn')) {
             const threadId = e.target.dataset.threadId;

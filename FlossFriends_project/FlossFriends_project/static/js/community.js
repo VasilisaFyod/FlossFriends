@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-
-    // Маппинг значений на русские названия
     const sizeLabels = {
         'small': 'Маленькие (≤50)',
         'medium': 'Средние (50-150)',
@@ -11,8 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'medium': 'Среднее (20-100)',
         'many': 'Много (100+)'
     };
-
-    // ===== SIZE FILTER (multi-select checkboxes) =====
     const sizeFilter = document.getElementById('sizeFilter');
     if (sizeFilter) {
         const selected = sizeFilter.querySelector('.select-selected');
@@ -35,8 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-
-    // ===== COLORS FILTER (multi-select checkboxes) =====
     const colorsFilter = document.getElementById('colorsFilter');
     if (colorsFilter) {
         const selected = colorsFilter.querySelector('.select-selected');
@@ -59,8 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-
-    // ===== CATEGORY FILTER (multi-select checkboxes) =====
     const categoryFilter = document.getElementById('categoryFilter');
     if (categoryFilter) {
         const selected = categoryFilter.querySelector('.select-selected');
@@ -106,8 +98,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.filter-group .custom-select')) closeAllSelects();
     });
-
-    // ===== FILTERING =====
     function applyFilters() {
         const checkedSize = sizeFilter
             ? [...sizeFilter.querySelectorAll('input:checked')].map(c => c.value)

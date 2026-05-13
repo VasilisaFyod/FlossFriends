@@ -9,7 +9,6 @@ from FlossFriends_project.models import Pattern
 
 def generate_pattern_preview(cells, width, height):
     """Генерирует превью схемы как изображение с сеткой"""
-    # Масштабируем превью, чтобы не было больше 600x600px
     max_preview_size = 600
     cell_size = max(1, min(20, max_preview_size // max(width, height, 1)))
     img_width = min(width * cell_size, max_preview_size)
@@ -17,11 +16,11 @@ def generate_pattern_preview(cells, width, height):
     image = Image.new('RGB', (img_width, img_height), 'white')
     draw = ImageDraw.Draw(image)
     
-    grid_color = (200, 200, 200)  # светло-серые линии
+    grid_color = (200, 200, 200)
     
     for y, row in enumerate(cells):
         for x, cell in enumerate(row):
-            if cell.get('code') is not None:  # не прозрачный
+            if cell.get('code') is not None:
                 x1 = x * cell_size
                 y1 = y * cell_size
                 x2 = x1 + cell_size
@@ -30,7 +29,6 @@ def generate_pattern_preview(cells, width, height):
                     [x1, y1, x2, y2],
                     fill=(cell['r'], cell['g'], cell['b'])
                 )
-                # Рисуем сетку
                 draw.rectangle([x1, y1, x2 - 1, y2 - 1], outline=grid_color)
     
     return image
@@ -59,7 +57,6 @@ class Command(BaseCommand):
 
         for pattern in patterns:
             try:
-                # Парсим pattern_data
                 try:
                     pattern_data = json.loads(pattern.pattern_data or "{}")
                 except (TypeError, json.JSONDecodeError):
@@ -73,15 +70,11 @@ class Command(BaseCommand):
                         )
                     )
                     continue
-
-                # Генерируем новое превью
                 preview_image = generate_pattern_preview(
                     cells,
                     pattern.size_width,
                     pattern.size_height
                 )
-
-                # Удаляем старое превью если оно существует
                 if pattern.image_preview:
                     old_preview_path = os.path.join(settings.MEDIA_ROOT, pattern.image_preview)
                     if os.path.exists(old_preview_path):
@@ -91,15 +84,11 @@ class Command(BaseCommand):
                             self.stdout.write(
                                 self.style.WARNING(f"  Не смог удалить старое превью: {e}")
                             )
-
-                # Сохраняем новое превью
                 preview_filename = f"preview_{uuid.uuid4()}.png"
                 preview_dir = os.path.join(settings.MEDIA_ROOT, 'preview')
                 os.makedirs(preview_dir, exist_ok=True)
                 preview_filepath = os.path.join(preview_dir, preview_filename)
                 preview_image.save(preview_filepath, 'PNG')
-
-                # Обновляем модель
                 pattern.image_preview = f'preview/{preview_filename}'
                 pattern.save(update_fields=['image_preview'])
 

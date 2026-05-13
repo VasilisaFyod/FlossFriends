@@ -31,9 +31,6 @@ document.addEventListener("DOMContentLoaded", function () {
             modal.classList.remove("active");
         };
     }
-
-
-    // делаем глобальной
     window.openDeleteModal = openDeleteModal;
     
     function openExitModal() {
@@ -54,9 +51,6 @@ document.addEventListener("DOMContentLoaded", function () {
             modal.classList.remove("active");
         };
     }
-
-
-    // делаем глобальной
     window.openExitModal = openExitModal;
 
 });

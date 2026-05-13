@@ -173,9 +173,6 @@ class PatternCreator {
         const selectedDiv = select?.querySelector('.select-selected');
         if (selectedDiv) selectedDiv.textContent = value;
     }
-
-    // Pattern loading, generation and canvas rendering live in create_pattern_steps_render.js.
-    // Legend, inventory and replacement logic live in create_pattern_steps_legend.js.
 }
 
 window.PatternCreator = PatternCreator;

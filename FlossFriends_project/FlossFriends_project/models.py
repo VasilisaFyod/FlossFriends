@@ -49,7 +49,6 @@ class Pattern(models.Model):
         related_name='patterns'
     )
     def delete(self, *args, **kwargs):
-        # Delete files from MEDIA_ROOT for both new and legacy stored paths.
         import os
         from django.conf import settings
 
@@ -59,8 +58,6 @@ class Pattern(models.Model):
 
             normalized = str(file_value).lstrip("/\\")
             candidates = [os.path.join(settings.MEDIA_ROOT, normalized)]
-
-            # Legacy rows may store only basename, e.g. "abc.png".
             if fallback_dir and os.path.basename(normalized) == normalized:
                 candidates.append(os.path.join(settings.MEDIA_ROOT, fallback_dir, normalized))
 

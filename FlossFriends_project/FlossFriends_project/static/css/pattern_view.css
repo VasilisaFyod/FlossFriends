@@ -1,4 +1,4 @@
-.pattern-main-content {
+﻿.pattern-main-content {
     display: flex;
     gap: 1rem;
     margin-bottom: 1rem;
@@ -169,7 +169,6 @@
     font-size:14px;
 }
 
-/* выбранный элемент */
 .select-selected{
     padding:12px 40px 12px 14px;
     border-radius:10px;
@@ -180,9 +179,8 @@
     position:relative;
 }
 
-/* стрелка */
 .select-selected::after{
-    content:"▾";
+    content:"в–ѕ";
     position:absolute;
     right:14px;
     top:50%;
@@ -193,12 +191,10 @@
     transition:transform 0.2s ease;
 }
 
-/* поворот стрелки при открытии */
 .custom-select.open .select-selected::after{
     transform:translateY(-50%) rotate(180deg);
 }
 
-/* выпадающий список */
 .select-items{
     position:absolute;
     top:100%;
@@ -213,7 +209,6 @@
     overflow:hidden;
 }
 
-/* элементы */
 .select-items div{
     padding:12px 14px;
     cursor:pointer;
@@ -224,7 +219,6 @@
     background:#f3f8f3;
 }
 
-/* Таблица легенды */
 .legend-table-container {
     flex: 1;
     overflow-y: auto;
@@ -289,14 +283,12 @@
     color: rgba(214, 92, 106, 0.95);
 }
 
-/* Кнопки навигации */
 .navigation-buttons {
     display: flex;
     justify-content: center;
     gap: 1rem;
 }
 
-/* Адаптивность */
 @media (max-width: 1000px) {
     .pattern-main-content {
         grid-template-columns: 1fr;

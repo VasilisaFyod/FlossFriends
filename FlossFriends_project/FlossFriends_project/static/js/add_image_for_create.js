@@ -137,8 +137,6 @@ document.addEventListener("DOMContentLoaded", () => {
             updateCreateButtonState()
         })
     })
-    
-    // восстановление вкладки
     if (savedTab) {
         const tabBtn = document.querySelector(`.tab-button[data-tab="${savedTab}"]`);
         if (tabBtn) tabBtn.click();
@@ -197,8 +195,6 @@ document.addEventListener("DOMContentLoaded", () => {
     generateAiBtn?.addEventListener("click", async () => {
         await generateImageFromPrompt(promptInput?.value || "");
     });
-
-    // окно загрузки
     createPatternBtn.addEventListener("click", async () => {
         if (createPatternBtn.disabled) {
             return;
@@ -218,14 +214,10 @@ document.addEventListener("DOMContentLoaded", () => {
             window.location.href = "/create_pattern_steps/";
             return;
         }
-
-        // если файл уже загружали и вернулись назад
         if (!imageUpload.files.length && savedImage) {
             window.location.href = "/create_pattern_steps/";
             return;
         }
-
-        // если файла вообще нет
         if (!imageUpload.files.length) {
             alert("Пожалуйста, выберите изображение.");
             return;
